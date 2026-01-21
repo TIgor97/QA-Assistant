@@ -77,6 +77,13 @@ async function initMenus() {
   });
 
   chrome.contextMenus.create({
+    id: "qa_scan_typos",
+    parentId: "qa_open",
+    title: "Scan for typos",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
     id: "qa_copy_css",
     parentId: "qa_copy_snippet",
     title: "CSS selector",
@@ -228,13 +235,6 @@ async function initMenus() {
     id: "qa_scan_security",
     parentId: "qa_open",
     title: "Scan security headers",
-    contexts: ["all"]
-  });
-
-  chrome.contextMenus.create({
-    id: "qa_scan_typos",
-    parentId: "qa_open",
-    title: "Scan for typos",
     contexts: ["all"]
   });
 
