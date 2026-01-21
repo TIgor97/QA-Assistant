@@ -230,6 +230,20 @@ async function initMenus() {
     title: "Scan security headers",
     contexts: ["all"]
   });
+
+  chrome.contextMenus.create({
+    id: "qa_scan_typos",
+    parentId: "qa_open",
+    title: "Scan page for typos",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
+    id: "qa_take_screenshot",
+    parentId: "qa_open",
+    title: "Save page screenshot",
+    contexts: ["all"]
+  });
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -272,6 +286,27 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "qa_scan_security") {
     const result = await scanSecurityHeaders(tab.url);
     await chrome.storage.session.set({ lastSecurity: result });
+    return;
+  }
+
+  if (info.menuItemId === "qa_scan_typos") {
+    await chrome.tabs.sendMessage(tab.id, { type: "QA_TYPO_SCAN" });
+    return;
+  }
+
+  if (info.menuItemId === "qa_take_screenshot") {
+    const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+    const title = (tab.title || "page")
+      .replace(/[^a-z0-9-_]+/gi, "_")
+      .replace(/_+/g, "_")
+      .slice(0, 80);
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const filename = `QA-Assistant/${title || "page"}_${stamp}.png`;
+    chrome.downloads.download({
+      url: dataUrl,
+      filename,
+      saveAs: true
+    });
     return;
   }
 

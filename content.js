@@ -105,6 +105,153 @@ function showToast(message) {
   setTimeout(() => toast.remove(), 2400);
 }
 
+function showTypoNotification(message, color) {
+  const existing = document.querySelector(".typo-notification");
+  if (existing) existing.remove();
+  const msg = document.createElement("div");
+  msg.className = "typo-notification";
+  msg.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: ${color};
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 999999;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    max-width: 300px;
+    font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    font-size: 12px;
+  `;
+  msg.textContent = message;
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 5000);
+}
+
+async function loadTypoDictionary() {
+  if (window.__qaTypoDictionary) return window.__qaTypoDictionary;
+  if (!window.Typo) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/typo-js@1.2.3/typo.min.js";
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  const [affRes, dicRes] = await Promise.all([
+    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/dictionaries/en_US/en_US.aff"),
+    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/dictionaries/en_US/en_US.dic")
+  ]);
+  const [aff, dic] = await Promise.all([affRes.text(), dicRes.text()]);
+  window.__qaTypoDictionary = new window.Typo("en_US", aff, dic);
+  return window.__qaTypoDictionary;
+}
+
+function removeTypoHighlights() {
+  document.querySelectorAll(".typo-word-highlight").forEach((el) => {
+    el.replaceWith(...el.childNodes);
+  });
+  document.querySelectorAll(".typo-notification").forEach((el) => el.remove());
+  const styleEl = document.getElementById("qa-typo-style");
+  if (styleEl) styleEl.remove();
+}
+
+function applyTypoHighlightStyles() {
+  if (document.getElementById("qa-typo-style")) return;
+  const style = document.createElement("style");
+  style.id = "qa-typo-style";
+  style.textContent = `
+    .typo-word-highlight {
+      background-color: #ffcccc;
+      border-bottom: 1px dashed red;
+      position: relative;
+      display: inline;
+    }
+    .typo-word-highlight:hover::after {
+      content: "Possible typo";
+      position: absolute;
+      background: #ff0000;
+      color: white;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 12px;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      z-index: 10000;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function checkTextNodeForTypos(node, dictionary) {
+  if (node.nodeType !== Node.TEXT_NODE || !node.nodeValue?.trim()) return;
+  const text = node.nodeValue;
+  const words = text.match(/\b[\w']+\b/g) || [];
+  let lastIndex = 0;
+  const newNodes = [];
+
+  words.forEach((word) => {
+    const wordStart = text.indexOf(word, lastIndex);
+    if (wordStart === -1) return;
+    if (wordStart > lastIndex) {
+      newNodes.push(document.createTextNode(text.slice(lastIndex, wordStart)));
+    }
+    if (word.length > 1 && /^[a-zA-Z]+$/.test(word) && !dictionary.check(word)) {
+      const span = document.createElement("span");
+      span.className = "typo-word-highlight";
+      span.textContent = word;
+      newNodes.push(span);
+    } else {
+      newNodes.push(document.createTextNode(word));
+    }
+    lastIndex = wordStart + word.length;
+  });
+
+  if (lastIndex < text.length) {
+    newNodes.push(document.createTextNode(text.slice(lastIndex)));
+  }
+
+  if (newNodes.length > 1 || (newNodes.length === 1 && newNodes[0].nodeType !== Node.TEXT_NODE)) {
+    const fragment = document.createDocumentFragment();
+    newNodes.forEach((n) => fragment.appendChild(n));
+    node.parentNode.replaceChild(fragment, node);
+  }
+}
+
+function walkNodesForTypos(node, dictionary) {
+  if (!node) return;
+  if (["SCRIPT", "STYLE", "NOSCRIPT", "IFRAME", "OBJECT", "CODE", "PRE"].includes(node.nodeName)) {
+    return;
+  }
+  if (node.nodeType === Node.TEXT_NODE) {
+    checkTextNodeForTypos(node, dictionary);
+  } else if (node.nodeType === Node.ELEMENT_NODE) {
+    Array.from(node.childNodes).forEach((child) => walkNodesForTypos(child, dictionary));
+  }
+}
+
+async function runTypoScan() {
+  if (document.querySelector(".typo-word-highlight")) {
+    removeTypoHighlights();
+    showTypoNotification("Typo highlights removed!", "#4CAF50");
+    return;
+  }
+
+  try {
+    applyTypoHighlightStyles();
+    const dictionary = await loadTypoDictionary();
+    walkNodesForTypos(document.body, dictionary);
+    showTypoNotification("Typo checking complete! Click again to remove highlights.", "#4CAF50");
+  } catch (error) {
+    showTypoNotification("Typo scan failed to load dictionary.", "#d32f2f");
+  }
+}
+
 function generateTestData(kind, variant) {
   return testDataCache?.[kind]?.[variant]?.[0] ?? "";
 }
@@ -1046,10 +1193,20 @@ async function handleMessage(msg, sendResponse) {
     const preview = buildSelectorPreview(element, selector);
     sendResponse({ selector, preview });
   }
+
+  if (msg?.type === "QA_TYPO_SCAN") {
+    await runTypoScan();
+    sendResponse({ ok: true });
+  }
 }
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-  const asyncTypes = new Set(["QA_INSERT_TEST_DATA", "QA_COPY_SNIPPET", "QA_COPY_ACTION_SNIPPET"]);
+  const asyncTypes = new Set([
+    "QA_INSERT_TEST_DATA",
+    "QA_COPY_SNIPPET",
+    "QA_COPY_ACTION_SNIPPET",
+    "QA_TYPO_SCAN"
+  ]);
   const isAsync = asyncTypes.has(msg?.type);
   handleMessage(msg, sendResponse);
   return isAsync;
