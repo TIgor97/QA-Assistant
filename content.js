@@ -132,10 +132,17 @@ function showTypoNotification(message, color) {
 async function loadTypoWordSet() {
   if (window.__qaTypoWordSet) return window.__qaTypoWordSet;
   const dicText = await fetch(chrome.runtime.getURL("assets/typo/en_US.dic")).then((res) => res.text());
+  const customText = await fetch(chrome.runtime.getURL("assets/typo/custom.dic"))
+    .then((res) => res.text())
+    .catch(() => "");
   const lines = dicText.split(/\r?\n/).filter(Boolean);
   const words = new Set();
   lines.slice(1).forEach((line) => {
     const word = line.split("/")[0]?.trim();
+    if (word) words.add(word.toLowerCase());
+  });
+  customText.split(/\r?\n/).forEach((line) => {
+    const word = line.trim();
     if (word) words.add(word.toLowerCase());
   });
   window.__qaTypoWordSet = words;
@@ -210,7 +217,15 @@ const typoIgnoreWords = new Set([
   "ui",
   "ux",
   "api",
-  "qa"
+  "qa",
+  "minute",
+  "minutes",
+  "mins",
+  "sec",
+  "secs",
+  "seconds",
+  "hour",
+  "hours"
 ]);
 
 function shouldIgnoreTypo(word, wordSet, counts) {

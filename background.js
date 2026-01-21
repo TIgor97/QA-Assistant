@@ -66,7 +66,7 @@ function createTestDataMenus(parentId) {
     nameUkrainian: "Ukrainian"
   };
 
-  const flattenKinds = new Set(["lorem", ...Object.keys(nameLabels)]);
+  const flattenKinds = new Set(["lorem", "city", "country", ...Object.keys(nameLabels)]);
   const legacyPaymentKinds = new Set([
     "directDebit",
     "directDebitUnipaas",
@@ -211,6 +211,7 @@ function createTestDataMenus(parentId) {
 
   Object.entries(testData).forEach(([kind, variants]) => {
     if (legacyPaymentKinds.has(kind)) return;
+    if (kind === "bugmagnetCities") return;
     if (kind.startsWith("bugmagnet")) return;
     if (kind === "paymentCards" || kind === "paymentDirectDebit" || kind === "loremTypes" || kind === "loremSizes") return;
     if (nameLabels[kind]) {

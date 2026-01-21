@@ -13,7 +13,6 @@
     <div class="hero">
       <div class="brand">QA Testing Assistant</div>
       <div class="subtitle">Fast selectors, datasets, and test ideas in one panel.</div>
-      <button id="closeSidePanel" class="ghost">Close side panel</button>
     </div>
 
     <div class="section">
@@ -40,7 +39,7 @@
         <div class="label">Last snippet</div>
         <div id="lastSnippet" class="mono">-</div>
       </div>
-      <div class="row two-col">
+      <div class="row">
         <div class="label">Framework</div>
         <select id="snippetFramework">
           <option value="all">All</option>
@@ -50,6 +49,8 @@
           <option value="vanilla">Vanilla JS</option>
           <option value="generic">Generic</option>
         </select>
+      </div>
+      <div class="row">
         <div class="label">Snippet type</div>
         <select id="snippetType">
           <option value="css">CSS selector</option>
@@ -88,6 +89,7 @@
           <option value="address">Address</option>
           <option value="addressLocale">Address (Locale)</option>
           <option value="postalCode">Postal code</option>
+          <option value="city">City</option>
           <option value="country">Country</option>
           <option value="username">Username</option>
           <option value="password">Password</option>

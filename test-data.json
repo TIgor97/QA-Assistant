@@ -887,29 +887,32 @@
       "10000-0000"
     ]
   },
-  "country": {
-    "valid": [
-      "United Kingdom",
-      "United States",
-      "Germany",
-      "Brazil",
-      "Japan"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "Narnia",
-      "Atlantis",
-      "U$A"
-    ],
-    "edge": [
-      "C\u00f4te d'Ivoire",
-      "Timor-Leste",
-      "Cura\u00e7ao",
-      "Saint Kitts and Nevis",
-      "North Macedonia"
-    ]
-  },
+  "city": [
+    "London",
+    "New York",
+    "Berlin",
+    "Tokyo",
+    "São Paulo",
+    "München",
+    "Zürich",
+    "Kraków",
+    "Ærøskøbing",
+    "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch",
+    "Å",
+    "Y"
+  ],
+  "country": [
+    "United Kingdom",
+    "United States",
+    "Germany",
+    "Brazil",
+    "Japan",
+    "Côte d'Ivoire",
+    "Timor-Leste",
+    "Curaçao",
+    "Saint Kitts and Nevis",
+    "North Macedonia"
+  ],
   "directDebit": {
     "valid": [
       "GB82WEST12345698765432",

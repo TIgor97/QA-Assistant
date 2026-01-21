@@ -432,7 +432,7 @@ function updateDataVariantVisibility() {
   const paymentVendor = document.getElementById("paymentVendor");
   const loremType = document.getElementById("loremType");
   const loremSizeType = document.getElementById("loremSizeType");
-  const hideVariants = kind === "names" || kind === "loremTypes" || kind === "loremSizes";
+  const hideVariants = kind === "names" || kind === "loremTypes" || kind === "loremSizes" || kind === "city" || kind === "country";
   variantSelect.classList.toggle("hidden", hideVariants);
   nameLocale.classList.toggle("hidden", kind !== "names");
   paymentKind.classList.toggle("hidden", kind !== "payment");
@@ -477,17 +477,6 @@ document.getElementById("nameLocale").addEventListener("change", () => {
 });
 
 updateDataVariantVisibility();
-
-document.getElementById("closeSidePanel").addEventListener("click", async () => {
-  const tabId = await getActiveTabId();
-  if (!tabId) return;
-  if (!chrome.sidePanel?.setOptions) {
-    showToast("Side panel not supported in this Chrome version.");
-    return;
-  }
-  await chrome.sidePanel.setOptions({ tabId, enabled: false });
-  showToast("Side panel closed.");
-});
 
 document.getElementById("insertData").addEventListener("click", async () => {
   const tabId = await getActiveTabId();

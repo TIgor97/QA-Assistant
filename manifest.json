@@ -17,7 +17,8 @@
         "test-data.json",
         "assets/typo/typo.min.js",
         "assets/typo/en_US.aff",
-        "assets/typo/en_US.dic"
+        "assets/typo/en_US.dic",
+        "assets/typo/custom.dic"
       ],
       "matches": [
         "<all_urls>"
