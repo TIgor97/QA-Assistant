@@ -676,7 +676,19 @@ document.getElementById("exportJira").addEventListener("click", async () => {
 });
 
 document.getElementById("autoLivePreview").addEventListener("change", async (e) => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+  await ensureContentScript(tabId);
+  if (e.target.checked) {
+    await chrome.tabs.sendMessage(tabId, { type: "QA_START_LIVE_PREVIEW" });
+  } else {
+    await chrome.tabs.sendMessage(tabId, { type: "QA_STOP_LIVE_PREVIEW" });
+  }
   await chrome.storage.local.set({ autoLivePreview: e.target.checked });
+  const liveToggle = document.getElementById("toggleLivePreview");
+  liveToggle.dataset.state = e.target.checked ? "on" : "off";
+  liveToggle.textContent = e.target.checked ? "Live preview: On" : "Live preview: Off";
+  await refreshSessionState();
 });
 
 document.getElementById("showSelectorPreview").addEventListener("change", async (e) => {

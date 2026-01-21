@@ -116,6 +116,23 @@ button:hover {
   flex-wrap: wrap;
 }
 
+.row.two-col {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) 110px minmax(0, 1fr);
+  gap: 8px 10px;
+  align-items: center;
+}
+
+.row.two-col .label {
+  width: auto;
+}
+
+.row.two-col select {
+  min-width: 0;
+  max-width: 220px;
+  width: 100%;
+}
+
 .label {
   font-size: 12px;
   color: #aeb7c8;
