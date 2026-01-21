@@ -141,8 +141,16 @@ async function getTestDataValue(kind, variant, index) {
 function formatSnippet(selector, target) {
   if (!selector) return "";
   if (target === "css") return selector;
-  if (target === "playwright") return `await page.locator('${selector}').click();`;
-  if (target === "cypress") return `cy.get('${selector}').click();`;
+  if (target === "playwright" || target === "playwright-ts") {
+    return `await page.locator('${selector}').click();`;
+  }
+  if (target === "cypress" || target === "cypress-ts") {
+    return `cy.get('${selector}').click();`;
+  }
+  if (target === "selenium-js" || target === "selenium-ts") {
+    return `await driver.findElement(By.css('${selector}')).click();`;
+  }
+  if (target === "js") return `document.querySelector('${selector}')?.click();`;
   return selector;
 }
 
@@ -217,6 +225,51 @@ function getXPath(el) {
   return parts.join("");
 }
 
+function getElementMetadata(element, selector) {
+  if (!(element instanceof Element)) return null;
+  const tag = element.tagName.toLowerCase();
+  const id = element.id || "";
+  const classList = Array.from(element.classList || []).filter(Boolean);
+  const name = element.getAttribute("name") || "";
+  const role = element.getAttribute("role") || getRoleForElement(element) || "";
+  const ariaLabel = element.getAttribute("aria-label") || "";
+  const placeholder = element.getAttribute("placeholder") || "";
+  const type = element.getAttribute("type") || "";
+  const testId = getTestId(element);
+  const text = (element.textContent || "").trim().slice(0, 120);
+  const outerHTML = element.outerHTML ? element.outerHTML.slice(0, 240) : "";
+  const frame = getFrameSelector(element);
+  return {
+    selector,
+    tag,
+    id,
+    classes: classList.slice(0, 6),
+    name,
+    role,
+    ariaLabel,
+    placeholder,
+    type,
+    testId,
+    text,
+    outerHTML,
+    frame
+  };
+}
+
+function getFrameSelector(element) {
+  if (!(element instanceof Element)) return "";
+  const frameEl = element.ownerDocument?.defaultView?.frameElement;
+  if (!(frameEl instanceof Element)) return "";
+  if (frameEl.id) return `#${cssEscape(frameEl.id)}`;
+  const name = frameEl.getAttribute("name");
+  if (name) return `iframe[name="${cssEscape(name)}"]`;
+  const title = frameEl.getAttribute("title");
+  if (title) return `iframe[title="${cssEscape(title)}"]`;
+  const src = frameEl.getAttribute("src");
+  if (src) return `iframe[src="${cssEscape(src)}"]`;
+  return "iframe";
+}
+
 function formatStrategySnippet(selector, target, element) {
   if (!element) return formatSnippet(selector, target);
   if (target === "playwright-role") {
@@ -233,6 +286,12 @@ function formatStrategySnippet(selector, target, element) {
     const testId = getTestId(element);
     if (testId) return `await page.getByTestId('${testId}').click();`;
   }
+  if (target === "playwright-frame") {
+    const frameSelector = getFrameSelector(element);
+    if (frameSelector) {
+      return `await page.frameLocator('${frameSelector}').locator('${selector}').click();`;
+    }
+  }
   if (target === "xpath") {
     const xpath = getXPath(element);
     if (xpath) return xpath;
@@ -240,15 +299,59 @@ function formatStrategySnippet(selector, target, element) {
   return formatSnippet(selector, target);
 }
 
+function formatActionSnippet(selector, target, action) {
+  if (!selector) return "";
+  const clickAction = action || "click";
+  if (target === "playwright" || target === "playwright-ts") {
+    if (clickAction === "double") return `await page.locator('${selector}').dblclick();`;
+    if (clickAction === "triple") return `await page.locator('${selector}').click({ clickCount: 3 });`;
+    return `await page.locator('${selector}').click();`;
+  }
+  if (target === "cypress" || target === "cypress-ts") {
+    if (clickAction === "double") return `cy.get('${selector}').dblclick();`;
+    if (clickAction === "triple") {
+      return `cy.get('${selector}').click().click().click();`;
+    }
+    return `cy.get('${selector}').click();`;
+  }
+  if (target === "selenium-js" || target === "selenium-ts") {
+    if (clickAction === "double") {
+      return `const el = await driver.findElement(By.css('${selector}'));
+await driver.actions().doubleClick(el).perform();`;
+    }
+    if (clickAction === "triple") {
+      return `const el = await driver.findElement(By.css('${selector}'));
+await el.click();
+await el.click();
+await el.click();`;
+    }
+    return `await driver.findElement(By.css('${selector}')).click();`;
+  }
+  if (clickAction === "double") {
+    return `document.querySelector('${selector}')?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));`;
+  }
+  if (clickAction === "triple") {
+    return `const el = document.querySelector('${selector}');
+if (el) { el.click(); el.click(); el.click(); }`;
+  }
+  return `document.querySelector('${selector}')?.click();`;
+}
+
 function buildSelectorPreview(element, selector) {
   const targets = [
     "css",
     "playwright",
+    "playwright-ts",
     "playwright-role",
     "playwright-label",
     "playwright-testid",
+    "playwright-frame",
     "xpath",
-    "cypress"
+    "cypress",
+    "cypress-ts",
+    "selenium-js",
+    "selenium-ts",
+    "js"
   ];
   return targets.map((target) => ({
     target,
@@ -703,6 +806,7 @@ async function onClick(e) {
   e.stopPropagation();
 
   const selector = uniqueSelector(e.target);
+  const meta = selector ? getElementMetadata(e.target, selector) : null;
   picking = false;
   clearOutlines();
   document.documentElement.classList.remove("qa-picker-active");
@@ -710,12 +814,17 @@ async function onClick(e) {
   document.removeEventListener("click", onClick, true);
 
   if (selector) {
-    await navigator.clipboard.writeText(selector).catch(() => {});
-    chrome.runtime.sendMessage({ type: "QA_SELECTOR_PICKED", selector });
+    await navigator.clipboard.writeText(selector).catch(() => { });
+    chrome.runtime.sendMessage({ type: "QA_SELECTOR_PICKED", selector, meta });
   }
 }
 
 async function handleMessage(msg, sendResponse) {
+  if (msg?.type === "QA_PING") {
+    sendResponse({ ok: true });
+    return;
+  }
+
   if (msg?.type === "QA_START_PICK_SELECTOR") {
     if (!picking) {
       picking = true;
@@ -768,7 +877,17 @@ async function handleMessage(msg, sendResponse) {
     const selector = msg?.selector || uniqueSelector(element);
     const code = formatStrategySnippet(selector, msg.target, element);
     if (code) {
-      await navigator.clipboard.writeText(code).catch(() => {});
+      await navigator.clipboard.writeText(code).catch(() => { });
+    }
+    sendResponse({ code });
+  }
+
+  if (msg?.type === "QA_COPY_ACTION_SNIPPET") {
+    const element = document.activeElement || document.body;
+    const selector = msg?.selector || uniqueSelector(element);
+    const code = formatActionSnippet(selector, msg.target, msg.action);
+    if (code) {
+      await navigator.clipboard.writeText(code).catch(() => { });
     }
     sendResponse({ code });
   }
@@ -782,7 +901,7 @@ async function handleMessage(msg, sendResponse) {
 }
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-  const asyncTypes = new Set(["QA_INSERT_TEST_DATA", "QA_COPY_SNIPPET"]);
+  const asyncTypes = new Set(["QA_INSERT_TEST_DATA", "QA_COPY_SNIPPET", "QA_COPY_ACTION_SNIPPET"]);
   const isAsync = asyncTypes.has(msg?.type);
   handleMessage(msg, sendResponse);
   return isAsync;

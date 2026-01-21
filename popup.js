@@ -3,6 +3,17 @@ async function getActiveTabId() {
   return tab?.id;
 }
 
+async function ensureContentScript(tabId) {
+  try {
+    await chrome.tabs.sendMessage(tabId, { type: "QA_PING" });
+    return true;
+  } catch {
+    await chrome.scripting.executeScript({ target: { tabId }, files: ["content.js"] });
+    await chrome.scripting.insertCSS({ target: { tabId }, files: ["content.css"] });
+    return true;
+  }
+}
+
 function buildOwaspChecklist(result) {
   const headers = result?.headers || {};
   return [
@@ -87,6 +98,39 @@ function renderPreview(previewItems, container) {
     const div = document.createElement("div");
     div.className = "item";
     div.textContent = `${item.target}: ${item.code || "-"}`;
+    container.appendChild(div);
+  });
+}
+
+function renderSelectorMeta(meta, container) {
+  container.innerHTML = "";
+  if (!meta) {
+    const empty = document.createElement("div");
+    empty.className = "item";
+    empty.textContent = "Pick an element to see details.";
+    container.appendChild(empty);
+    return;
+  }
+
+  const entries = [
+    ["Tag", meta.tag],
+    ["ID", meta.id],
+    ["Classes", (meta.classes || []).join(" ")],
+    ["Name", meta.name],
+    ["Role", meta.role],
+    ["Aria label", meta.ariaLabel],
+    ["Placeholder", meta.placeholder],
+    ["Type", meta.type],
+    ["Test ID", meta.testId],
+    ["Frame", meta.frame],
+    ["Text", meta.text],
+    ["Outer HTML", meta.outerHTML]
+  ].filter(([, value]) => value);
+
+  entries.forEach(([label, value]) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = `${label}: ${value}`;
     container.appendChild(div);
   });
 }
@@ -206,8 +250,9 @@ function renderSecurity(result, container) {
 }
 
 async function refreshSessionState() {
-  const { lastSelector, lastScan, lastSnippet, lastSecurity, lastLivePreview } = await chrome.storage.session.get([
+  const { lastSelector, lastSelectorMeta, lastScan, lastSnippet, lastSecurity, lastLivePreview } = await chrome.storage.session.get([
     "lastSelector",
+    "lastSelectorMeta",
     "lastScan",
     "lastSnippet",
     "lastSecurity",
@@ -225,6 +270,9 @@ async function refreshSessionState() {
 
   const snippet = document.getElementById("lastSnippet");
   snippet.textContent = lastSnippet || "-";
+
+  const metaBox = document.getElementById("selectorMeta");
+  renderSelectorMeta(lastSelectorMeta, metaBox);
 
   const list = document.getElementById("lastScan");
   list.innerHTML = "";
@@ -272,6 +320,7 @@ async function refreshSessionState() {
 document.getElementById("pickSelector").addEventListener("click", async () => {
   const tabId = await getActiveTabId();
   if (!tabId) return;
+  await ensureContentScript(tabId);
   await chrome.tabs.sendMessage(tabId, { type: "QA_START_PICK_SELECTOR" });
   window.close();
 });
@@ -319,6 +368,7 @@ document.getElementById("scanPage").addEventListener("click", async () => {
 document.getElementById("previewSelector").addEventListener("click", async () => {
   const tabId = await getActiveTabId();
   if (!tabId) return;
+  await ensureContentScript(tabId);
   const res = await chrome.tabs.sendMessage(tabId, { type: "QA_SELECTOR_PREVIEW" });
   const previewBox = document.getElementById("selectorPreview");
   renderPreview(res?.preview || [], previewBox);
@@ -343,6 +393,7 @@ document.getElementById("toggleLivePreview").addEventListener("click", async () 
   const button = document.getElementById("toggleLivePreview");
   const tabId = await getActiveTabId();
   if (!tabId) return;
+  await ensureContentScript(tabId);
   const isOn = button.dataset.state === "on";
   if (isOn) {
     await chrome.tabs.sendMessage(tabId, { type: "QA_STOP_LIVE_PREVIEW" });
@@ -360,6 +411,7 @@ document.getElementById("toggleLivePreview").addEventListener("click", async () 
 document.getElementById("copySnippet").addEventListener("click", async () => {
   const tabId = await getActiveTabId();
   if (!tabId) return;
+  await ensureContentScript(tabId);
   const target = document.getElementById("snippetType").value;
   await chrome.tabs.sendMessage(tabId, { type: "QA_COPY_SNIPPET", target });
   window.close();

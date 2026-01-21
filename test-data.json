@@ -318,6 +318,144 @@
       "de la Cruz"
     ]
   },
+  "nameWelsh": {
+    "valid": [
+      "Siân Evans",
+      "Gwynfor Jones",
+      "Rhiannon Price",
+      "Eifion Davies",
+      "Catrin Hughes"
+    ],
+    "invalid": [
+      "",
+      "12345",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "Dafydd ap Gwilym",
+      "Llywelyn ab Iorwerth",
+      "Rhys-Owen",
+      "Siân-Jane",
+      "Ioan G."
+    ]
+  },
+  "nameJapanese": {
+    "valid": [
+      "山田太郎",
+      "佐藤花子",
+      "鈴木一郎",
+      "高橋美咲",
+      "田中健"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "中島 京子",
+      "大島-健太",
+      "長谷川",
+      "山本 太一",
+      "林\u3000正雄"
+    ]
+  },
+  "nameChinese": {
+    "valid": [
+      "王伟",
+      "李娜",
+      "张敏",
+      "陈强",
+      "刘芳"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "欧阳娜娜",
+      "司马光",
+      "张 伟",
+      "赵-磊",
+      "梁\u00a0明"
+    ]
+  },
+  "nameSerbian": {
+    "valid": [
+      "Nikola Petrovi\u0107",
+      "Milica Jovanovi\u0107",
+      "Marko \u0110or\u0111evi\u0107",
+      "Jelena Stojanovi\u0107",
+      "Aleksandar Ili\u0107"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\u017divko \u0106osi\u0107",
+      "Marija-An\u0111ela",
+      "Sava O'Ne\u0161i\u0107",
+      "Jovan \u0110. Petrovi\u0107",
+      "Ana-Ma\u0161a"
+    ]
+  },
+  "nameBosnian": {
+    "valid": [
+      "Adnan Had\u017ei\u0107",
+      "Lejla Kova\u010devi\u0107",
+      "Emir D\u017eafi\u0107",
+      "Amina \u0160abi\u0107",
+      "Amar Be\u0161i\u0107"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "Haris \u0110oki\u0107",
+      "\u017deljka Omerovi\u0107",
+      "Senad-\u0160ehi\u0107",
+      "Ivana \u0160.\u0106osi\u0107",
+      "Emina \u0160ari\u0107"
+    ]
+  },
+  "nameCroatian": {
+    "valid": [
+      "Ivan Horvat",
+      "Marija Kova\u010di\u0107",
+      "Luka Babi\u0107",
+      "Ana Mari\u0107",
+      "Petar Radi\u0107"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\u017deljko \u0160imi\u0107",
+      "Marin-\u017drivkovi\u0107",
+      "Nina O'Kova\u010di\u0107",
+      "Dora \u017d. Horvat",
+      "Iva \u0106uri\u0107"
+    ]
+  },
   "phone": {
     "valid": [
       "+44 7700 900123",

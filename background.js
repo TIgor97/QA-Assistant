@@ -70,6 +70,13 @@ async function initMenus() {
   });
 
   chrome.contextMenus.create({
+    id: "qa_action_suggestions",
+    parentId: "qa_open",
+    title: "Action suggestions",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
     id: "qa_copy_css",
     parentId: "qa_copy_snippet",
     title: "CSS selector",
@@ -80,6 +87,13 @@ async function initMenus() {
     id: "qa_copy_playwright",
     parentId: "qa_copy_snippet",
     title: "Playwright (CSS)",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
+    id: "qa_copy_playwright_ts",
+    parentId: "qa_copy_snippet",
+    title: "Playwright (TypeScript)",
     contexts: ["all"]
   });
 
@@ -105,6 +119,13 @@ async function initMenus() {
   });
 
   chrome.contextMenus.create({
+    id: "qa_copy_playwright_frame",
+    parentId: "qa_copy_snippet",
+    title: "Playwright (iframe)",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
     id: "qa_copy_xpath",
     parentId: "qa_copy_snippet",
     title: "XPath",
@@ -116,6 +137,65 @@ async function initMenus() {
     parentId: "qa_copy_snippet",
     title: "Cypress (CSS)",
     contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
+    id: "qa_copy_cypress_ts",
+    parentId: "qa_copy_snippet",
+    title: "Cypress (TypeScript)",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
+    id: "qa_copy_selenium_js",
+    parentId: "qa_copy_snippet",
+    title: "Selenium (JavaScript)",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
+    id: "qa_copy_selenium_ts",
+    parentId: "qa_copy_snippet",
+    title: "Selenium (TypeScript)",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
+    id: "qa_copy_js",
+    parentId: "qa_copy_snippet",
+    title: "Vanilla JS",
+    contexts: ["all"]
+  });
+
+  const actionTargets = [
+    { id: "playwright", label: "Playwright" },
+    { id: "playwright-ts", label: "Playwright (TypeScript)" },
+    { id: "cypress", label: "Cypress" },
+    { id: "cypress-ts", label: "Cypress (TypeScript)" },
+    { id: "selenium-js", label: "Selenium (JavaScript)" },
+    { id: "selenium-ts", label: "Selenium (TypeScript)" },
+    { id: "js", label: "Vanilla JS" }
+  ];
+
+  actionTargets.forEach((target) => {
+    chrome.contextMenus.create({
+      id: `qa_action:${target.id}:click`,
+      parentId: "qa_action_suggestions",
+      title: `Click (${target.label})`,
+      contexts: ["all"]
+    });
+    chrome.contextMenus.create({
+      id: `qa_action:${target.id}:double`,
+      parentId: "qa_action_suggestions",
+      title: `Double click (${target.label})`,
+      contexts: ["all"]
+    });
+    chrome.contextMenus.create({
+      id: `qa_action:${target.id}:triple`,
+      parentId: "qa_action_suggestions",
+      title: `Triple click (${target.label})`,
+      contexts: ["all"]
+    });
   });
 
   chrome.contextMenus.create({
@@ -153,11 +233,17 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const targetMap = {
     qa_copy_css: "css",
     qa_copy_playwright: "playwright",
+    qa_copy_playwright_ts: "playwright-ts",
     qa_copy_playwright_role: "playwright-role",
     qa_copy_playwright_label: "playwright-label",
     qa_copy_playwright_testid: "playwright-testid",
+    qa_copy_playwright_frame: "playwright-frame",
     qa_copy_xpath: "xpath",
-    qa_copy_cypress: "cypress"
+    qa_copy_cypress: "cypress",
+    qa_copy_cypress_ts: "cypress-ts",
+    qa_copy_selenium_js: "selenium-js",
+    qa_copy_selenium_ts: "selenium-ts",
+    qa_copy_js: "js"
   };
 
   if (info.menuItemId === "qa_pick_selector") {
@@ -192,6 +278,21 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     return;
   }
 
+  if (itemId.startsWith("qa_action:")) {
+    const [, target, action] = itemId.split(":");
+    const { lastSelector } = await chrome.storage.session.get(["lastSelector"]);
+    const snippet = await chrome.tabs.sendMessage(tab.id, {
+      type: "QA_COPY_ACTION_SNIPPET",
+      target,
+      action,
+      selector: lastSelector
+    });
+    if (snippet?.code) {
+      await chrome.storage.session.set({ lastSnippet: snippet.code });
+    }
+    return;
+  }
+
   if (itemId.startsWith("qa_data:")) {
     const [, kind, variant, index] = itemId.split(":");
     await chrome.tabs.sendMessage(tab.id, {
@@ -205,7 +306,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg?.type === "QA_SELECTOR_PICKED") {
-    chrome.storage.session.set({ lastSelector: msg.selector }).then(() => {
+    chrome.storage.session.set({
+      lastSelector: msg.selector,
+      lastSelectorMeta: msg.meta || null
+    }).then(() => {
       sendResponse({ ok: true });
     });
     return true;
