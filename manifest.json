@@ -31,7 +31,14 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "QA Testing Assistant"
+    "default_title": "QA Testing Assistant",
+    "default_icon": {
+      "16": "icon16.png",
+      "24": "icon24.png",
+      "32": "icon32.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
   },
   "side_panel": {
     "default_path": "popup.html"
