@@ -18,10 +18,12 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 
 ## ✨ Highlights
 
-- **Selector toolkit**: Pick elements with a live outline and copy CSS, XPath, Playwright, Cypress, and `getByRole` snippets.
-- **Massive datasets**: Valid, invalid, boundary, and Unicode-heavy inputs (Bug Magnet + custom).
+- **Selector toolkit**: Pick elements with a live outline, see metadata (tag/id/classes/role/aria), and copy CSS, XPath, Playwright, Cypress, Selenium, or JS snippets.
+- **Action suggestions**: Right-click actions for click/double/triple/hover/right-click/drag/drop/type/select/check/keys/scroll/long-press/swipe/file upload.
+- **Massive datasets**: Valid, invalid, boundary, and Unicode-heavy inputs (Bug Magnet + custom locales).
 - **Bulk fill forms**: Auto-populates fields using label/placeholder heuristics and generates test cases.
 - **Test idea generator**: Scans pages and proposes scenarios from HTML constraints.
+- **Clipboard + downloads**: Exports copy to clipboard, TXT scans/downloads with toast confirmations.
 - **Security quick check**: Flags missing headers and surfaces OWASP hints.
 
 ---
@@ -30,8 +32,9 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 
 ### 1) Smart Selector Panel
 - Visual hover picker + selector preview
-- Copy CSS / XPath / Playwright / Cypress
-- Export snippets that match automation best practices
+- Element metadata (tag/id/classes/role/aria/placeholder/text/frame)
+- Copy CSS / XPath / Playwright (CSS, getByRole/Label/TestId, iframe) / Cypress / Selenium / Vanilla JS
+- Live toasts on selector/snippet copy
 
 ### 2) Test Data Engine
 - Huge dataset library (Bug Magnet + custom)
@@ -47,6 +50,7 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 - Reads required/min/max/pattern attributes
 - Covers email/url/tel/date/password constraints
 - Adds iframe and external link scenarios
+- Auto-copies TXT scan results + optional TXT download
 
 ### 5) Security Checks
 - Basic header inspection (CSP/HSTS/XFO/etc.)
@@ -54,11 +58,10 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 
 ---
 
-## 🧪 Bug Magnet Dataset Coverage
-
-Extended datasets based on [Bug Magnet](https://bugmagnet.org/):
+## 🧪 Dataset Coverage
 
 - Names, emails, addresses, unicode, whitespace
+- Localized names (Welsh, Japanese, Chinese, Serbian, Bosnian, Croatian, Greek, Arabic, Hindi, Korean, Turkish, Vietnamese, Polish, Ukrainian)
 - URLs, numbers, currencies, boundary values
 - Payment cards (Stripe, Braintree, Authorize.Net, PayPal, Vantiv)
 - Text size generators (128b, 256b, 32K, 64K)
@@ -80,7 +83,8 @@ Extended datasets based on [Bug Magnet](https://bugmagnet.org/):
 - Click the extension icon to open the panel
 - Pick a selector or insert test data into a focused field
 - Use **Bulk fill form** to auto-populate inputs
-- Run **Scan page → test cases** for exploratory ideas
+- Run **Scan page → test cases** for exploratory ideas (TXT copied + downloaded)
+- Use **Export** to copy Markdown/Gherkin/JSON/CSV/TXT/Jira or Playwright/Cypress scripts
 
 ---
 
@@ -106,7 +110,7 @@ This extension combines **datasets + selectors + automation-ready exports + test
 
 ## 📤 Export Options
 
-- Markdown / Gherkin / JSON / CSV
+- Markdown / Gherkin / JSON / CSV / TXT
 - Playwright / Cypress snippets
 - Jira-friendly formats
 
@@ -117,7 +121,8 @@ This extension combines **datasets + selectors + automation-ready exports + test
 - **activeTab**: Read and inject data only on the active tab you choose.
 - **scripting**: Insert selectors, scan pages, and fill fields on demand.
 - **storage**: Save preferences and last scan results.
-- **contextMenus**: Right-click insertion of test data.
+- **contextMenus**: Right-click insertion of test data and action snippets.
+- **downloads**: Save TXT exports of scans.
 
 ---
 
@@ -149,6 +154,12 @@ Open a GitHub issue for bugs, feature requests, or dataset additions.
 - Context-menu template builder
 - Structured test case export to Jira Cloud
 - Heavier heuristics for field detection
+
+---
+
+## 📝 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for recent updates.
 
 ---
 
