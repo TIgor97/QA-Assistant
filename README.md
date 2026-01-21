@@ -20,7 +20,7 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 
 - **Selector toolkit**: Pick elements with a live outline, see metadata (tag/id/classes/role/aria), and copy CSS, XPath, Playwright, Cypress, Selenium, or JS snippets.
 - **Action suggestions**: Right-click actions for click/double/triple/hover/right-click/drag/drop/type/select/check/keys/scroll/long-press/swipe/file upload.
-- **Typo scan + screenshots**: Right-click **Scan for typos** to highlight possible typos, or **Save page screenshot** for ticket attachments.
+- **Typo scan + screenshots**: Right-click **Scan for typos** to highlight possible typos in blue (click anywhere to clear), or **Save page screenshot** for ticket attachments.
 - **Massive datasets**: Valid, invalid, boundary, and Unicode-heavy inputs (Bug Magnet + custom locales).
 - **Bulk fill forms**: Auto-populates fields using label/placeholder heuristics and generates test cases.
 - **Test idea generator**: Scans pages and proposes scenarios from HTML constraints.
@@ -58,7 +58,7 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 - OWASP reminders embedded in the popup
 
 ### 6) Context Menu Utilities
-- Scan for typos (toggle highlights)
+- Scan for typos (blue highlights, click to clear, lower false positives)
 - Save page screenshot with page title + timestamp
 
 ---

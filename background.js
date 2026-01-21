@@ -101,6 +101,13 @@ async function initMenus() {
   });
 
   chrome.contextMenus.create({
+    id: "qa_take_screenshot",
+    parentId: "qa_open",
+    title: "Save page screenshot",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
     id: "qa_copy_css",
     parentId: "qa_copy_snippet",
     title: "CSS selector",
@@ -255,12 +262,6 @@ async function initMenus() {
     contexts: ["all"]
   });
 
-  chrome.contextMenus.create({
-    id: "qa_take_screenshot",
-    parentId: "qa_open",
-    title: "Save page screenshot",
-    contexts: ["all"]
-  });
 }
 
 chrome.runtime.onInstalled.addListener(() => {

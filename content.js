@@ -91,7 +91,7 @@ function clearOutlines() {
 function setOutline(el) {
   if (!(el instanceof Element)) return;
   if (!lastOutline.has(el)) lastOutline.set(el, el.style.outline);
-  el.style.outline = "2px solid #ff3b30";
+  el.style.outline = "2px solid #3b82f6";
 }
 
 function showToast(message) {
@@ -166,15 +166,15 @@ function applyTypoHighlightStyles() {
   style.id = "qa-typo-style";
   style.textContent = `
     .typo-word-highlight {
-      background-color: #ffcccc;
-      border-bottom: 1px dashed red;
+      background-color: #bfdbfe;
+      border-bottom: 1px dashed #2563eb;
       position: relative;
       display: inline;
     }
     .typo-word-highlight:hover::after {
       content: "Possible typo";
       position: absolute;
-      background: #ff0000;
+      background: #2563eb;
       color: white;
       padding: 2px 5px;
       border-radius: 3px;
@@ -189,7 +189,25 @@ function applyTypoHighlightStyles() {
   document.head.appendChild(style);
 }
 
-function checkTextNodeForTypos(node, wordSet) {
+function normalizeTypoWord(word) {
+  let normalized = word.toLowerCase();
+  if (normalized.endsWith("'s")) {
+    normalized = normalized.slice(0, -2);
+  }
+  return normalized;
+}
+
+function shouldIgnoreTypo(word, wordSet, counts) {
+  if (word.length <= 2) return true;
+  if (!/^[a-zA-Z]+$/.test(word)) return true;
+  const normalized = normalizeTypoWord(word);
+  if (wordSet.has(normalized)) return true;
+  if ((counts.get(normalized) || 0) >= 3) return true;
+  if (/^[A-Z]/.test(word)) return true;
+  return false;
+}
+
+function checkTextNodeForTypos(node, wordSet, counts) {
   if (node.nodeType !== Node.TEXT_NODE || !node.nodeValue?.trim()) return;
   const text = node.nodeValue;
   const words = text.match(/\b[\w']+\b/g) || [];
@@ -202,7 +220,7 @@ function checkTextNodeForTypos(node, wordSet) {
     if (wordStart > lastIndex) {
       newNodes.push(document.createTextNode(text.slice(lastIndex, wordStart)));
     }
-    if (word.length > 1 && /^[a-zA-Z]+$/.test(word) && !wordSet.has(word.toLowerCase())) {
+    if (!shouldIgnoreTypo(word, wordSet, counts)) {
       const span = document.createElement("span");
       span.className = "typo-word-highlight";
       span.textContent = word;
@@ -224,15 +242,34 @@ function checkTextNodeForTypos(node, wordSet) {
   }
 }
 
-function walkNodesForTypos(node, wordSet) {
+function walkNodesForTypos(node, wordSet, counts) {
   if (!node) return;
   if (["SCRIPT", "STYLE", "NOSCRIPT", "IFRAME", "OBJECT", "CODE", "PRE"].includes(node.nodeName)) {
     return;
   }
   if (node.nodeType === Node.TEXT_NODE) {
-    checkTextNodeForTypos(node, wordSet);
+    checkTextNodeForTypos(node, wordSet, counts);
   } else if (node.nodeType === Node.ELEMENT_NODE) {
-    Array.from(node.childNodes).forEach((child) => walkNodesForTypos(child, wordSet));
+    Array.from(node.childNodes).forEach((child) => walkNodesForTypos(child, wordSet, counts));
+  }
+}
+
+function collectWordCounts(node, counts) {
+  if (!node) return;
+  if (["SCRIPT", "STYLE", "NOSCRIPT", "IFRAME", "OBJECT", "CODE", "PRE"].includes(node.nodeName)) {
+    return;
+  }
+  if (node.nodeType === Node.TEXT_NODE && node.nodeValue?.trim()) {
+    const words = node.nodeValue.match(/\b[\w']+\b/g) || [];
+    words.forEach((word) => {
+      if (!/^[a-zA-Z]+$/.test(word)) return;
+      const normalized = normalizeTypoWord(word);
+      counts.set(normalized, (counts.get(normalized) || 0) + 1);
+    });
+    return;
+  }
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    Array.from(node.childNodes).forEach((child) => collectWordCounts(child, counts));
   }
 }
 
@@ -246,7 +283,9 @@ async function runTypoScan() {
   try {
     applyTypoHighlightStyles();
     const wordSet = await loadTypoWordSet();
-    walkNodesForTypos(document.body, wordSet);
+    const counts = new Map();
+    collectWordCounts(document.body, counts);
+    walkNodesForTypos(document.body, wordSet, counts);
     window.__qaTypoActive = true;
     document.addEventListener("click", handleTypoClearClick, true);
     showTypoNotification("Typo checking complete! Click again to remove highlights.", "#4CAF50");

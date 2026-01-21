@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-01-21
+
 ### Added
 - Selector metadata panel (tag/id/classes/role/aria/placeholder/text/frame).
 - New snippet targets: Playwright TS, Cypress TS, Selenium JS/TS, Vanilla JS, Playwright iframe.
@@ -15,6 +17,7 @@
 ### Changed
 - Picker flow keeps popup open when possible and surfaces live feedback.
 - Downloads permission added for TXT exports.
+- Typo scan now uses blue highlights, click-to-clear behavior, and stricter filtering to reduce false positives.
 
 ### Fixed
 - Selector picker reliability by ensuring content script injection.
