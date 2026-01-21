@@ -21,7 +21,7 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 - **Selector toolkit**: Pick elements with a live outline, see metadata (tag/id/classes/role/aria), and copy CSS, XPath, Playwright, Cypress, Selenium, or JS snippets.
 - **Action suggestions**: Right-click actions for click/double/triple/hover/right-click/drag/drop/type/select/check/keys/scroll/long-press/swipe/file upload.
 - **Typo scan + screenshots**: Right-click **Scan for typos** to highlight possible typos in blue (click anywhere to clear), or **Save page screenshot** for ticket attachments.
-- **Massive datasets**: Valid, invalid, boundary, and Unicode-heavy inputs (Bug Magnet + custom locales).
+- **Massive datasets**: Valid, invalid, boundary, and Unicode-heavy inputs (Bug Magnet + custom locales), now grouped under Payment → Credit Cards/Direct Debit and streamlined names/lorem selections.
 - **Bulk fill forms**: Auto-populates fields using label/placeholder heuristics and generates test cases.
 - **Test idea generator**: Scans pages and proposes scenarios from HTML constraints.
 - **Clipboard + downloads**: Exports copy to clipboard, TXT scans/downloads with toast confirmations.
@@ -39,7 +39,9 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 
 ### 2) Test Data Engine
 - Huge dataset library (Bug Magnet + custom)
-- **Valid / Invalid / Edge / Random** variants
+- **Valid / Invalid / Edge / Random** variants for structured datasets
+- Streamlined **Names** (locale picker) and **Lorem** (type/size) selections
+- Payment datasets grouped under **Payment → Credit Cards/Direct Debit**
 - Supports template expansion (e.g. 128b/64K generated text)
 
 ### 3) Bulk Fill Forms
@@ -68,7 +70,7 @@ Exploratory testing superpowers for Chrome. This extension blends **Bug Magnet-i
 - Names, emails, addresses, unicode, whitespace
 - Localized names (Welsh, Japanese, Chinese, Serbian, Bosnian, Croatian, Greek, Arabic, Hindi, Korean, Turkish, Vietnamese, Polish, Ukrainian)
 - URLs, numbers, currencies, boundary values
-- Payment cards (Stripe, Braintree, Authorize.Net, PayPal, Vantiv)
+- Payment cards grouped by brand + direct debit scenarios (Stripe, Braintree, Authorize.Net, PayPal, Vantiv)
 - Text size generators (128b, 256b, 32K, 64K)
 - Unicode confusables, RTL overrides, emojis, control chars
 

@@ -157,7 +157,7 @@ function handleTypoClearClick(event) {
   if (event.button !== 0) return;
   if (!document.querySelector(".typo-word-highlight")) return;
   removeTypoHighlights();
-  showTypoNotification("Typo highlights removed!", "#4CAF50");
+  showTypoNotification("Typo highlights removed!", "#3b82f6");
 }
 
 function applyTypoHighlightStyles() {
@@ -197,10 +197,27 @@ function normalizeTypoWord(word) {
   return normalized;
 }
 
+const typoIgnoreWords = new Set([
+  "ok",
+  "okay",
+  "lol",
+  "idk",
+  "tbh",
+  "thx",
+  "pls",
+  "plz",
+  "faq",
+  "ui",
+  "ux",
+  "api",
+  "qa"
+]);
+
 function shouldIgnoreTypo(word, wordSet, counts) {
-  if (word.length <= 2) return true;
+  if (word.length <= 3) return true;
   if (!/^[a-zA-Z]+$/.test(word)) return true;
   const normalized = normalizeTypoWord(word);
+  if (typoIgnoreWords.has(normalized)) return true;
   if (wordSet.has(normalized)) return true;
   if ((counts.get(normalized) || 0) >= 3) return true;
   if (/^[A-Z]/.test(word)) return true;
@@ -213,6 +230,7 @@ function checkTextNodeForTypos(node, wordSet, counts) {
   const words = text.match(/\b[\w']+\b/g) || [];
   let lastIndex = 0;
   const newNodes = [];
+  let typoCount = 0;
 
   words.forEach((word) => {
     const wordStart = text.indexOf(word, lastIndex);
@@ -225,6 +243,7 @@ function checkTextNodeForTypos(node, wordSet, counts) {
       span.className = "typo-word-highlight";
       span.textContent = word;
       newNodes.push(span);
+      typoCount += 1;
     } else {
       newNodes.push(document.createTextNode(word));
     }
@@ -240,6 +259,7 @@ function checkTextNodeForTypos(node, wordSet, counts) {
     newNodes.forEach((n) => fragment.appendChild(n));
     node.parentNode.replaceChild(fragment, node);
   }
+  return typoCount;
 }
 
 function walkNodesForTypos(node, wordSet, counts) {
@@ -248,9 +268,11 @@ function walkNodesForTypos(node, wordSet, counts) {
     return;
   }
   if (node.nodeType === Node.TEXT_NODE) {
-    checkTextNodeForTypos(node, wordSet, counts);
+    return checkTextNodeForTypos(node, wordSet, counts);
   } else if (node.nodeType === Node.ELEMENT_NODE) {
-    Array.from(node.childNodes).forEach((child) => walkNodesForTypos(child, wordSet, counts));
+    return Array.from(node.childNodes).reduce((total, child) => {
+      return total + (walkNodesForTypos(child, wordSet, counts) || 0);
+    }, 0);
   }
 }
 
@@ -276,7 +298,7 @@ function collectWordCounts(node, counts) {
 async function runTypoScan() {
   if (document.querySelector(".typo-word-highlight")) {
     removeTypoHighlights();
-    showTypoNotification("Typo highlights removed!", "#4CAF50");
+    showTypoNotification("Typo highlights removed!", "#3b82f6");
     return;
   }
 
@@ -285,10 +307,14 @@ async function runTypoScan() {
     const wordSet = await loadTypoWordSet();
     const counts = new Map();
     collectWordCounts(document.body, counts);
-    walkNodesForTypos(document.body, wordSet, counts);
+    const typoCount = walkNodesForTypos(document.body, wordSet, counts) || 0;
     window.__qaTypoActive = true;
     document.addEventListener("click", handleTypoClearClick, true);
-    showTypoNotification("Typo checking complete! Click again to remove highlights.", "#4CAF50");
+    if (typoCount > 0) {
+      showTypoNotification("Typo checking complete! Click again to remove highlights.", "#3b82f6");
+    } else {
+      showTypoNotification("No typos found.", "#3b82f6");
+    }
   } catch (error) {
     showTypoNotification("Typo scan failed to load dictionary.", "#d32f2f");
   }
@@ -322,14 +348,45 @@ function expandTestDataValue(value) {
 
 async function getTestDataValue(kind, variant, index) {
   const data = await loadTestData();
+  const group = kind
+    .split(".")
+    .reduce((acc, key) => (acc ? acc[key] : undefined), data);
+  const nameKindPrefixes = [
+    "name",
+    "nameWelsh",
+    "nameJapanese",
+    "nameChinese",
+    "nameSerbian",
+    "nameBosnian",
+    "nameCroatian",
+    "nameGreek",
+    "nameArabic",
+    "nameHindi",
+    "nameKorean",
+    "nameTurkish",
+    "nameVietnamese",
+    "namePolish",
+    "nameUkrainian"
+  ];
+  const baseKind = kind.split(".")[0];
+  const noInvalidKinds = new Set(["loremTypes", "loremSizes", "bugmagnetLorems", ...nameKindPrefixes]);
+  if (Array.isArray(group)) {
+    if (!group.length) return "";
+    if (index === "random" || variant === "random") {
+      return expandTestDataValue(group[Math.floor(Math.random() * group.length)]);
+    }
+    const idx = Number.parseInt(index ?? "0", 10);
+    return expandTestDataValue(group[idx] ?? group[0]);
+  }
   if (variant === "random") {
-    const group = data?.[kind] || {};
-    const pools = Object.values(group).filter((arr) => Array.isArray(arr) && arr.length);
+    const pools = Object.entries(group || {})
+      .filter(([key, arr]) => Array.isArray(arr) && arr.length && (!noInvalidKinds.has(baseKind) || key !== "invalid"))
+      .map(([, arr]) => arr);
     if (!pools.length) return "";
     const pick = pools[Math.floor(Math.random() * pools.length)];
     return expandTestDataValue(pick[Math.floor(Math.random() * pick.length)]);
   }
-  const values = data?.[kind]?.[variant] ?? [];
+  const values = group?.[variant] ?? [];
   if (!values.length) return "";
   if (index === "random") {
     return expandTestDataValue(values[Math.floor(Math.random() * values.length)]);
@@ -497,6 +554,41 @@ function formatStrategySnippet(selector, target, element) {
     if (xpath) return xpath;
   }
   return formatSnippet(selector, target);
+}
+
+function scoreSelectorOption(target, element, selector) {
+  const testId = getTestId(element);
+  const role = getRoleForElement(element);
+  const label = getLabelText(element);
+  const hasId = element?.id;
+  const hasName = element?.getAttribute?.("name");
+  const hasAria = element?.getAttribute?.("aria-label");
+
+  if (target === "playwright-testid" && testId) {
+    return { score: 100, note: "Best: stable test id" };
+  }
+  if (target === "playwright-role" && role) {
+    return { score: 92, note: "Best: accessible role" };
+  }
+  if (target === "playwright-label" && label) {
+    return { score: 90, note: "Best: label-based" };
+  }
+  if (target === "css" && (testId || hasId || hasName || hasAria)) {
+    return { score: 82, note: "Strong: semantic attributes" };
+  }
+  if (target === "playwright" || target === "playwright-ts") {
+    return { score: 75, note: "Solid: CSS locator" };
+  }
+  if (target === "cypress" || target === "cypress-ts") {
+    return { score: 70, note: "Solid: CSS selector" };
+  }
+  if (target === "xpath") {
+    return { score: 45, note: "Fallback: XPath" };
+  }
+  if (selector?.includes(":nth-of-type")) {
+    return { score: 55, note: "Fragile: nth-of-type" };
+  }
+  return { score: 60, note: "Fallback" };
 }
 
 function formatActionSnippet(selector, target, action) {
@@ -687,15 +779,23 @@ function buildSelectorPreview(element, selector) {
     "selenium-ts",
     "js"
   ];
-  return targets.map((target) => ({
-    target,
-    code: formatStrategySnippet(selector, target, element)
-  }));
+  const items = targets.map((target) => {
+    const code = formatStrategySnippet(selector, target, element);
+    const { score, note } = scoreSelectorOption(target, element, selector);
+    return {
+      target,
+      code,
+      score,
+      note
+    };
+  });
+  return items.sort((a, b) => b.score - a.score);
 }
 
 function insertIntoActiveElement(text) {
   const el = document.activeElement;
   if (!(el instanceof HTMLInputElement) && !(el instanceof HTMLTextAreaElement)) return false;
+  if (el.readOnly || el.disabled) return false;
 
   const start = el.selectionStart ?? el.value.length;
   const end = el.selectionEnd ?? el.value.length;
@@ -1191,7 +1291,23 @@ async function handleMessage(msg, sendResponse) {
   if (msg?.type === "QA_INSERT_TEST_DATA") {
     const value = await getTestDataValue(msg.kind, msg.variant, msg.index);
     const ok = insertIntoActiveElement(value);
-    sendResponse({ ok });
+    let copied = false;
+    if (!ok && value) {
+      try {
+        await navigator.clipboard.writeText(String(value));
+        copied = true;
+      } catch {
+        copied = false;
+      }
+    }
+    if (copied) {
+      showToast("Test data copied to clipboard.");
+    } else if (ok) {
+      showToast("Test data inserted.");
+    } else {
+      showToast("No focused input. Clipboard copy failed.");
+    }
+    sendResponse({ ok, copied, value });
     return;
   }
 

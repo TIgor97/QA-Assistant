@@ -143,10 +143,13 @@ async function copyExport(format) {
 
 function renderPreview(previewItems, container) {
   container.innerHTML = "";
-  previewItems.forEach((item) => {
+  if (!previewItems?.length) return;
+  previewItems.forEach((item, index) => {
     const div = document.createElement("div");
     div.className = "item";
-    div.textContent = `${item.target}: ${item.code || "-"}`;
+    if (index === 0) div.classList.add("best");
+    const suffix = item.note ? ` (${item.note})` : "";
+    div.textContent = `${item.target}: ${item.code || "-"}${suffix}`;
     container.appendChild(div);
   });
 }
@@ -182,6 +185,49 @@ function renderSelectorMeta(meta, container) {
     div.textContent = `${label}: ${value}`;
     container.appendChild(div);
   });
+}
+
+const snippetFrameworkMap = {
+  all: [
+    "css",
+    "playwright",
+    "playwright-ts",
+    "playwright-role",
+    "playwright-label",
+    "playwright-testid",
+    "playwright-frame",
+    "xpath",
+    "cypress",
+    "cypress-ts",
+    "selenium-js",
+    "selenium-ts",
+    "js"
+  ],
+  playwright: [
+    "playwright",
+    "playwright-ts",
+    "playwright-role",
+    "playwright-label",
+    "playwright-testid",
+    "playwright-frame"
+  ],
+  cypress: ["cypress", "cypress-ts"],
+  selenium: ["selenium-js", "selenium-ts"],
+  vanilla: ["js"],
+  generic: ["css", "xpath"]
+};
+
+function filterSnippetOptions(framework) {
+  const select = document.getElementById("snippetType");
+  const allowed = new Set(snippetFrameworkMap[framework] || snippetFrameworkMap.all);
+  const options = Array.from(select.options);
+  options.forEach((option) => {
+    option.hidden = !allowed.has(option.value);
+  });
+  if (!allowed.has(select.value)) {
+    const fallback = options.find((option) => allowed.has(option.value));
+    if (fallback) select.value = fallback.value;
+  }
 }
 
 function buildSecurityChecklist(result) {
@@ -374,17 +420,133 @@ document.getElementById("pickSelector").addEventListener("click", async () => {
   showToast("Pick an element on the page.");
 });
 
+document.getElementById("snippetFramework").addEventListener("change", (e) => {
+  filterSnippetOptions(e.target.value);
+});
+
+function updateDataVariantVisibility() {
+  const kind = document.getElementById("dataKind").value;
+  const variantSelect = document.getElementById("dataVariant");
+  const nameLocale = document.getElementById("nameLocale");
+  const paymentKind = document.getElementById("paymentKind");
+  const paymentVendor = document.getElementById("paymentVendor");
+  const loremType = document.getElementById("loremType");
+  const loremSizeType = document.getElementById("loremSizeType");
+  const hideVariants = kind === "names" || kind === "loremTypes" || kind === "loremSizes";
+  variantSelect.classList.toggle("hidden", hideVariants);
+  nameLocale.classList.toggle("hidden", kind !== "names");
+  paymentKind.classList.toggle("hidden", kind !== "payment");
+  paymentVendor.classList.toggle("hidden", kind !== "payment");
+  loremType.classList.toggle("hidden", kind !== "loremTypes");
+  loremSizeType.classList.toggle("hidden", kind !== "loremSizes");
+
+  if (kind === "payment") {
+    const paymentValue = paymentKind.value;
+    if (paymentValue === "cards") {
+      paymentVendor.innerHTML = "";
+      ["visa", "mastercard", "amex", "discover", "jcb", "diners"].forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value === "amex" ? "Amex" : value.charAt(0).toUpperCase() + value.slice(1);
+        paymentVendor.appendChild(option);
+      });
+    } else {
+      paymentVendor.innerHTML = "";
+      ["iban", "unipaas", "stripeAccount", "stripeToken", "stripeMicrodeposit"].forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (char) => char.toUpperCase());
+        paymentVendor.appendChild(option);
+      });
+    }
+  }
+}
+
+document.getElementById("dataKind").addEventListener("change", () => {
+  updateDataVariantVisibility();
+});
+
+document.getElementById("paymentKind").addEventListener("change", () => {
+  updateDataVariantVisibility();
+});
+
+document.getElementById("nameLocale").addEventListener("change", () => {
+  updateDataVariantVisibility();
+});
+
+updateDataVariantVisibility();
+
+document.getElementById("closeSidePanel").addEventListener("click", async () => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+  if (!chrome.sidePanel?.setOptions) {
+    showToast("Side panel not supported in this Chrome version.");
+    return;
+  }
+  await chrome.sidePanel.setOptions({ tabId, enabled: false });
+  showToast("Side panel closed.");
+});
+
 document.getElementById("insertData").addEventListener("click", async () => {
   const tabId = await getActiveTabId();
   if (!tabId) return;
+  await ensureContentScript(tabId);
 
-  const kind = document.getElementById("dataKind").value;
-  const variant = document.getElementById("dataVariant").value;
+  const dataKind = document.getElementById("dataKind").value;
+  const paymentKind = document.getElementById("paymentKind").value;
+  const paymentVendor = document.getElementById("paymentVendor").value;
+  const loremType = document.getElementById("loremType").value;
+  const loremSizeType = document.getElementById("loremSizeType").value;
+  const kind = dataKind === "names"
+    ? document.getElementById("nameLocale").value
+    : dataKind === "payment"
+      ? (paymentKind === "cards"
+        ? `paymentCards.${paymentVendor}`
+        : `paymentDirectDebit.${paymentVendor}`)
+      : dataKind === "loremTypes"
+        ? `loremTypes.${loremType}`
+        : dataKind === "loremSizes"
+          ? `loremSizes.${loremSizeType}`
+          : dataKind;
+  const variant = document.getElementById("dataVariant").classList.contains("hidden")
+    ? "valid"
+    : document.getElementById("dataVariant").value;
   const indexValue = document.getElementById("dataIndex").value.trim();
   const index = variant === "random" ? "random" : indexValue || "0";
 
-  await chrome.tabs.sendMessage(tabId, { type: "QA_INSERT_TEST_DATA", kind, variant, index });
-  window.close();
+  const res = await chrome.tabs.sendMessage(tabId, { type: "QA_INSERT_TEST_DATA", kind, variant, index });
+  if (res?.copied) {
+    showToast("Test data copied to clipboard.");
+  } else if (res?.ok) {
+    showToast("Test data inserted.");
+  } else {
+    showToast("No focused input. Clipboard copy failed.");
+  }
+});
+
+document.querySelectorAll(".qa-quick-data").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const kind = button.dataset.kind;
+    const variant = button.dataset.variant || "valid";
+    const tabId = await getActiveTabId();
+    if (!tabId) return;
+    await ensureContentScript(tabId);
+    const res = await chrome.tabs.sendMessage(tabId, {
+      type: "QA_INSERT_TEST_DATA",
+      kind,
+      variant,
+      index: "random"
+    });
+    if (res?.copied) {
+      showToast("Test data copied to clipboard.");
+    } else if (res?.ok) {
+      showToast("Test data inserted.");
+    } else if (!res?.ok) {
+      showToast("No focused input. Clipboard copy failed.");
+    }
+  });
 });
 
 document.getElementById("bulkInsert").addEventListener("click", async () => {
@@ -403,6 +565,8 @@ document.getElementById("bulkInsert").addEventListener("click", async () => {
     await chrome.storage.session.set({ lastScan: res.result.testCases });
     await refreshSessionState();
   }
+  filterSnippetOptions(document.getElementById("snippetFramework").value);
+  updateDataVariantVisibility();
 });
 
 document.getElementById("scanPage").addEventListener("click", async () => {

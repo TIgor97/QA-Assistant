@@ -24,42 +24,236 @@ async function fetchTypoAssets() {
   return typoAssetsCache;
 }
 
+async function ensureContentScript(tabId) {
+  try {
+    await chrome.tabs.sendMessage(tabId, { type: "QA_PING" });
+    return true;
+  } catch {
+    try {
+      await chrome.scripting.executeScript({ target: { tabId }, files: ["content.js"] });
+      await chrome.scripting.insertCSS({ target: { tabId }, files: ["content.css"] });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}
+
 function createTestDataMenus(parentId) {
+  const nameRootId = "qa_kind:names";
+  let namesRootCreated = false;
+  const formatLabel = (value) =>
+    String(value || "")
+      .replace(/([A-Z])/g, " $1")
+      .replace(/[_-]+/g, " ")
+      .trim()
+      .replace(/^./, (char) => char.toUpperCase());
+  const nameLabels = {
+    name: "General",
+    nameWelsh: "Welsh",
+    nameJapanese: "Japanese",
+    nameChinese: "Chinese",
+    nameSerbian: "Serbian",
+    nameBosnian: "Bosnian",
+    nameCroatian: "Croatian",
+    nameGreek: "Greek",
+    nameArabic: "Arabic",
+    nameHindi: "Hindi",
+    nameKorean: "Korean",
+    nameTurkish: "Turkish",
+    nameVietnamese: "Vietnamese",
+    namePolish: "Polish",
+    nameUkrainian: "Ukrainian"
+  };
+
+  const flattenKinds = new Set(["lorem", ...Object.keys(nameLabels)]);
+  const legacyPaymentKinds = new Set([
+    "directDebit",
+    "directDebitUnipaas",
+    "directDebitStripeAccount",
+    "directDebitStripeToken",
+    "directDebitStripeMicrodeposit",
+    "iban"
+  ]);
+
+  const addVariantMenus = (parent, kind, variants) => {
+    Object.entries(variants || {}).forEach(([variant, values]) => {
+      if (!Array.isArray(values)) return;
+      const variantLabel = formatLabel(variant || "Value");
+      const variantId = `qa_variant:${kind}:${variant}`;
+      chrome.contextMenus.create({
+        id: variantId,
+        parentId: parent,
+        title: variantLabel,
+        contexts: ["all"]
+      });
+      addValuesMenu(variantId, kind, variant, values);
+    });
+  };
+
+  const addValuesMenu = (parent, kind, variant, values) => {
+    chrome.contextMenus.create({
+      id: `qa_data:${kind}:${variant}:random`,
+      parentId: parent,
+      title: "Random",
+      contexts: ["all"]
+    });
+
+    values.slice(0, MAX_ITEMS_PER_VARIANT).forEach((value, index) => {
+      const label = typeof value === "string" ? value : JSON.stringify(value);
+      const safeLabel = String(label || value || "Value");
+      const trimmed = safeLabel.length > 48 ? `${safeLabel.slice(0, 48)}...` : safeLabel;
+      chrome.contextMenus.create({
+        id: `qa_data:${kind}:${variant}:${index}`,
+        parentId: parent,
+        title: trimmed,
+        contexts: ["all"]
+      });
+    });
+  };
+
+  const paymentCards = testData?.paymentCards || {};
+  const paymentDirectDebit = testData?.paymentDirectDebit || {};
+
+  if (Object.keys(paymentCards).length || Object.keys(paymentDirectDebit).length) {
+    const paymentRootId = "qa_kind:payment";
+    chrome.contextMenus.create({
+      id: paymentRootId,
+      parentId,
+      title: "Payment",
+      contexts: ["all"]
+    });
+
+    if (Object.keys(paymentCards).length) {
+      const cardsRootId = "qa_kind:paymentCards";
+      chrome.contextMenus.create({
+        id: cardsRootId,
+        parentId: paymentRootId,
+        title: "Credit cards",
+        contexts: ["all"]
+      });
+      Object.entries(paymentCards).forEach(([brand, variants]) => {
+        const brandId = `qa_kind:paymentCards.${brand}`;
+        const label = brand === "amex" ? "Amex" : formatLabel(brand);
+        chrome.contextMenus.create({
+          id: brandId,
+          parentId: cardsRootId,
+          title: label,
+          contexts: ["all"]
+        });
+        addVariantMenus(brandId, `paymentCards.${brand}`, variants);
+      });
+    }
+
+    if (Object.keys(paymentDirectDebit).length) {
+      const debitRootId = "qa_kind:paymentDirectDebit";
+      chrome.contextMenus.create({
+        id: debitRootId,
+        parentId: paymentRootId,
+        title: "Direct debit",
+        contexts: ["all"]
+      });
+      Object.entries(paymentDirectDebit).forEach(([type, variants]) => {
+        const typeId = `qa_kind:paymentDirectDebit.${type}`;
+        const label = formatLabel(type);
+        chrome.contextMenus.create({
+          id: typeId,
+          parentId: debitRootId,
+          title: label,
+          contexts: ["all"]
+        });
+        addVariantMenus(typeId, `paymentDirectDebit.${type}`, variants);
+      });
+    }
+  }
+
+  if (testData?.loremTypes) {
+    const loremTypesRoot = "qa_kind:loremTypes";
+    chrome.contextMenus.create({
+      id: loremTypesRoot,
+      parentId,
+      title: "Lorem types",
+      contexts: ["all"]
+    });
+    Object.entries(testData.loremTypes).forEach(([type, values]) => {
+      const typeId = `qa_kind:loremTypes.${type}`;
+      const label = formatLabel(type);
+      chrome.contextMenus.create({
+        id: typeId,
+        parentId: loremTypesRoot,
+        title: label,
+        contexts: ["all"]
+      });
+      addValuesMenu(typeId, `loremTypes.${type}`, "valid", Array.isArray(values) ? values : []);
+    });
+  }
+
+  if (testData?.loremSizes) {
+    const loremSizesRoot = "qa_kind:loremSizes";
+    chrome.contextMenus.create({
+      id: loremSizesRoot,
+      parentId,
+      title: "Lorem sizes",
+      contexts: ["all"]
+    });
+    Object.entries(testData.loremSizes).forEach(([type, values]) => {
+      const typeId = `qa_kind:loremSizes.${type}`;
+      const label = formatLabel(type);
+      chrome.contextMenus.create({
+        id: typeId,
+        parentId: loremSizesRoot,
+        title: label,
+        contexts: ["all"]
+      });
+      addValuesMenu(typeId, `loremSizes.${type}`, "valid", Array.isArray(values) ? values : []);
+    });
+  }
+
   Object.entries(testData).forEach(([kind, variants]) => {
+    if (legacyPaymentKinds.has(kind)) return;
+    if (kind.startsWith("bugmagnet")) return;
+    if (kind === "paymentCards" || kind === "paymentDirectDebit" || kind === "loremTypes" || kind === "loremSizes") return;
+    if (nameLabels[kind]) {
+      if (!namesRootCreated) {
+        chrome.contextMenus.create({
+          id: nameRootId,
+          parentId,
+          title: "Names",
+          contexts: ["all"]
+        });
+        namesRootCreated = true;
+      }
+      const localeId = `qa_kind:${kind}`;
+      chrome.contextMenus.create({
+        id: localeId,
+        parentId: nameRootId,
+        title: nameLabels[kind],
+        contexts: ["all"]
+      });
+      const values = Array.isArray(variants)
+        ? variants
+        : [...(variants?.valid || []), ...(variants?.edge || [])];
+      addValuesMenu(localeId, kind, "valid", values);
+      return;
+    }
+
+    const kindLabel = formatLabel(kind || "Data");
     const kindId = `qa_kind:${kind}`;
     chrome.contextMenus.create({
       id: kindId,
       parentId,
-      title: kind,
-      contexts: ["editable"]
+      title: kindLabel,
+      contexts: ["all"]
     });
 
-    Object.entries(variants).forEach(([variant, values]) => {
-      if (!Array.isArray(values)) return;
-      const variantId = `qa_variant:${kind}:${variant}`;
-      chrome.contextMenus.create({
-        id: variantId,
-        parentId: kindId,
-        title: variant,
-        contexts: ["editable"]
-      });
-
-      chrome.contextMenus.create({
-        id: `qa_data:${kind}:${variant}:random`,
-        parentId: variantId,
-        title: "Random",
-        contexts: ["editable"]
-      });
-
-      values.slice(0, MAX_ITEMS_PER_VARIANT).forEach((value, index) => {
-        chrome.contextMenus.create({
-          id: `qa_data:${kind}:${variant}:${index}`,
-          parentId: variantId,
-          title: value.length > 48 ? `${value.slice(0, 48)}...` : value,
-          contexts: ["editable"]
-        });
-      });
-    });
+    if (flattenKinds.has(kind)) {
+      const values = Array.isArray(variants)
+        ? variants
+        : [...(variants?.valid || []), ...(variants?.edge || [])];
+      addValuesMenu(kindId, kind, "valid", values);
+      return;
+    }
+    addVariantMenus(kindId, kind, variants);
   });
 }
 
@@ -104,6 +298,13 @@ async function initMenus() {
     id: "qa_take_screenshot",
     parentId: "qa_open",
     title: "Save page screenshot",
+    contexts: ["all"]
+  });
+
+  chrome.contextMenus.create({
+    id: "qa_insert_input",
+    parentId: "qa_open",
+    title: "Insert test data",
     contexts: ["all"]
   });
 
@@ -239,14 +440,7 @@ async function initMenus() {
     });
   });
 
-  chrome.contextMenus.create({
-    id: "qa_generate_test_data",
-    parentId: "qa_open",
-    title: "Insert test data",
-    contexts: ["editable"]
-  });
-
-  createTestDataMenus("qa_generate_test_data");
+  createTestDataMenus("qa_insert_input");
 
   chrome.contextMenus.create({
     id: "qa_scan_page",
@@ -266,6 +460,25 @@ async function initMenus() {
 
 chrome.runtime.onInstalled.addListener(() => {
   loadTestData().then(initMenus).catch(initMenus);
+  if (chrome.sidePanel?.setPanelBehavior) {
+    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => { });
+  }
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  if (chrome.sidePanel?.setPanelBehavior) {
+    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => { });
+  }
+});
+
+chrome.action.onClicked.addListener(async (tab) => {
+  if (!tab?.id || !chrome.sidePanel?.open) return;
+  try {
+    await chrome.sidePanel.setOptions({ tabId: tab.id, enabled: true });
+    await chrome.sidePanel.open({ tabId: tab.id });
+  } catch {
+    // ignore if side panel not available
+  }
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -289,11 +502,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   };
 
   if (info.menuItemId === "qa_pick_selector") {
+    if (!(await ensureContentScript(tab.id))) return;
     await chrome.tabs.sendMessage(tab.id, { type: "QA_START_PICK_SELECTOR" });
     return;
   }
 
   if (info.menuItemId === "qa_scan_page") {
+    if (!(await ensureContentScript(tab.id))) return;
     const res = await chrome.tabs.sendMessage(tab.id, { type: "QA_SCAN_PAGE" });
     if (res?.testCases) {
       await chrome.storage.session.set({ lastScan: res.testCases });
@@ -308,6 +523,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 
   if (info.menuItemId === "qa_scan_typos") {
+    if (!(await ensureContentScript(tab.id))) return;
     await chrome.tabs.sendMessage(tab.id, { type: "QA_TYPO_SCAN" });
     return;
   }
@@ -329,6 +545,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 
   if (itemId in targetMap) {
+    if (!(await ensureContentScript(tab.id))) return;
     const { lastSelector } = await chrome.storage.session.get(["lastSelector"]);
     const snippet = await chrome.tabs.sendMessage(tab.id, {
       type: "QA_COPY_SNIPPET",
@@ -342,6 +559,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 
   if (itemId.startsWith("qa_action:")) {
+    if (!(await ensureContentScript(tab.id))) return;
     const [, target, action] = itemId.split(":");
     const { lastSelector } = await chrome.storage.session.get(["lastSelector"]);
     const snippet = await chrome.tabs.sendMessage(tab.id, {
@@ -357,6 +575,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 
   if (itemId.startsWith("qa_data:")) {
+    if (!(await ensureContentScript(tab.id))) return;
     const [, kind, variant, index] = itemId.split(":");
     await chrome.tabs.sendMessage(tab.id, {
       type: "QA_INSERT_TEST_DATA",

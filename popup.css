@@ -1,7 +1,9 @@
 body {
   margin: 0;
   font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
-  width: 410px;
+  width: 100%;
+  max-width: 520px;
+  min-width: 360px;
   background: radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 60%),
     #0b1120;
   color: #e2e8f0;
@@ -10,7 +12,9 @@ body {
 .wrap {
   padding: 16px;
   display: grid;
-  gap: 10px;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .hero {
@@ -33,25 +37,47 @@ body {
   margin-top: 6px;
 }
 
+.hero button {
+  margin-top: 10px;
+}
+
 .section {
   border: 1px solid rgba(148, 163, 184, 0.16);
   border-radius: 14px;
-  padding: 14px;
+  padding: 16px;
   background: rgba(15, 23, 42, 0.8);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
+.section+.section {
+  margin-top: 4px;
+}
+
+.section>button+button {
+  margin-top: 12px;
+}
+
+.section .row+button {
+  margin-top: 12px;
+}
+
+.section .row>button {
+  margin-top: 6px;
+}
+
 button {
   width: 100%;
-  padding: 9px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.95), rgba(59, 130, 246, 0.88));
   color: #f8fafc;
   font-weight: 600;
+  font-size: 12px;
   letter-spacing: 0.2px;
   cursor: pointer;
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.28);
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
 
 button.muted {
@@ -63,7 +89,7 @@ button.muted {
 
 button.ghost {
   background: transparent;
-  border: 1px dashed rgba(148, 163, 184, 0.4);
+  border: 1px dashed rgba(148, 163, 184, 0.35);
   color: #cbd5f5;
   box-shadow: none;
 }
@@ -76,11 +102,17 @@ button:active {
   transform: translateY(1px);
 }
 
+button:hover {
+  border-color: rgba(191, 219, 254, 0.7);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
 .row {
   display: flex;
-  gap: 6px;
+  gap: 10px;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 10px;
   flex-wrap: wrap;
 }
 
@@ -120,6 +152,10 @@ select {
   box-shadow: none;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 11px;
@@ -128,9 +164,9 @@ select {
 }
 
 .list {
-  margin-top: 6px;
+  margin-top: 8px;
   display: grid;
-  gap: 6px;
+  gap: 8px;
 }
 
 .item {
@@ -140,6 +176,11 @@ select {
   font-size: 11px;
   color: #e2e8f0;
   background: rgba(15, 23, 42, 0.6);
+}
+
+.item.best {
+  border-color: rgba(59, 130, 246, 0.7);
+  background: rgba(59, 130, 246, 0.15);
 }
 
 .toggle {
@@ -163,12 +204,12 @@ select {
   position: sticky;
   bottom: 8px;
   margin-top: 12px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(96, 165, 250, 0.6);
+  background: rgba(30, 64, 175, 0.92);
   color: #e2e8f0;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   opacity: 0;
   transform: translateY(8px);

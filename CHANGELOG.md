@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+- Payment test data hierarchy (Credit Cards/Direct Debit) with brand/type grouping.
+- Lorem types and sizes selectors for streamlined test data insertion.
+
+### Changed
+- Flattened name datasets with locale picker and simplified lorem selection.
+- Context menu test data labels now capitalize and group Payment datasets.
+- Popup buttons and spacing refreshed for clearer click affordance.
+
 ## [0.1.1] - 2026-01-21
 
 ### Added

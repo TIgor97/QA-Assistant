@@ -292,354 +292,188 @@
       "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
     ]
   },
-  "name": {
-    "valid": [
-      "Zoe O'Connor",
-      "Jose Maria Gonzalez",
-      "Jean-Francois Muller",
-      "Oyvind As",
-      "Lukasz Dabrowski",
-      "\u5f20\u4f1f",
-      "\u0645\u062d\u0645\u062f \u0628\u0646 \u0639\u0628\u062f\u0627\u0644\u0644\u0647"
-    ],
-    "invalid": [
-      "",
-      "   ",
-      "12345",
-      "!@#$%",
-      "<script>alert('xss')</script>",
-      "'; DROP TABLE users; --"
-    ],
-    "edge": [
-      "A",
-      "Dr. Jane Smith Jr. III",
-      "O'Neill",
-      "van Beethoven",
-      "de la Cruz"
-    ]
-  },
-  "nameWelsh": {
-    "valid": [
-      "Siân Evans",
-      "Gwynfor Jones",
-      "Rhiannon Price",
-      "Eifion Davies",
-      "Catrin Hughes"
-    ],
-    "invalid": [
-      "",
-      "12345",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "Dafydd ap Gwilym",
-      "Llywelyn ab Iorwerth",
-      "Rhys-Owen",
-      "Siân-Jane",
-      "Ioan G."
-    ]
-  },
-  "nameJapanese": {
-    "valid": [
-      "山田太郎",
-      "佐藤花子",
-      "鈴木一郎",
-      "高橋美咲",
-      "田中健"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "中島 京子",
-      "大島-健太",
-      "長谷川",
-      "山本 太一",
-      "林\u3000正雄"
-    ]
-  },
-  "nameChinese": {
-    "valid": [
-      "王伟",
-      "李娜",
-      "张敏",
-      "陈强",
-      "刘芳"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "欧阳娜娜",
-      "司马光",
-      "张 伟",
-      "赵-磊",
-      "梁\u00a0明"
-    ]
-  },
-  "nameSerbian": {
-    "valid": [
-      "Nikola Petrovi\u0107",
-      "Milica Jovanovi\u0107",
-      "Marko \u0110or\u0111evi\u0107",
-      "Jelena Stojanovi\u0107",
-      "Aleksandar Ili\u0107"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\u017divko \u0106osi\u0107",
-      "Marija-An\u0111ela",
-      "Sava O'Ne\u0161i\u0107",
-      "Jovan \u0110. Petrovi\u0107",
-      "Ana-Ma\u0161a"
-    ]
-  },
-  "nameBosnian": {
-    "valid": [
-      "Adnan Had\u017ei\u0107",
-      "Lejla Kova\u010devi\u0107",
-      "Emir D\u017eafi\u0107",
-      "Amina \u0160abi\u0107",
-      "Amar Be\u0161i\u0107"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "Haris \u0110oki\u0107",
-      "\u017deljka Omerovi\u0107",
-      "Senad-\u0160ehi\u0107",
-      "Ivana \u0160.\u0106osi\u0107",
-      "Emina \u0160ari\u0107"
-    ]
-  },
-  "nameCroatian": {
-    "valid": [
-      "Ivan Horvat",
-      "Marija Kova\u010di\u0107",
-      "Luka Babi\u0107",
-      "Ana Mari\u0107",
-      "Petar Radi\u0107"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\u017deljko \u0160imi\u0107",
-      "Marin-\u017drivkovi\u0107",
-      "Nina O'Kova\u010di\u0107",
-      "Dora \u017d. Horvat",
-      "Iva \u0106uri\u0107"
-    ]
-  },
-  "nameGreek": {
-    "valid": [
-      "Giorgos Papadopoulos",
-      "Eleni Nikolaou",
-      "Kostas Georgiou",
-      "Maria Dimitriou",
-      "Nikos Andreou"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\u0393\u03b9\u03ce\u03c1\u03b3\u03bf\u03c2 \u03a0\u03b1\u03c0\u03b1\u03b4\u03cc\u03c0\u03bf\u03c5\u03bb\u03bf\u03c2",
-      "\u0395\u03bb\u03ad\u03bd\u03b7 \u039d\u03b9\u03ba\u03bf\u03bb\u03ac\u03bf\u03c5",
-      "K. \u0391\u03bd\u03b4\u03c1\u03ad\u03bf\u03c5",
-      "Ioannis \u039d.",
-      "Anna-Maria"
-    ]
-  },
-  "nameArabic": {
-    "valid": [
-      "\u0623\u062d\u0645\u062f \u0639\u0644\u064a",
-      "\u0641\u0627\u0637\u0645\u0629 \u0627\u0644\u0632\u0647\u0631\u0627\u0621",
-      "\u0645\u062d\u0645\u062f \u062d\u0633\u064a\u0646",
-      "\u0646\u0648\u0631 \u0623\u062d\u0645\u062f",
-      "\u0633\u0627\u0645\u064a \u0627\u0644\u062d\u0627\u0645\u062f"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\u064a\u0627\u0633\u0645\u064a\u0646 \u0628\u0646 \u0639\u0644\u064a",
-      "\u0623\u062d\u0645\u062f-\u0641\u0627\u0631\u0633",
-      "\u0641\u0627\u0637\u0645\u0629 \u0632.",
-      "\u0645\u062d\u0645\u062f \u0627\u0628\u0646 \u0633\u0639\u064a\u062f",
-      "\u0644\u064a\u0644\u0649"
-    ]
-  },
-  "nameHindi": {
-    "valid": [
-      "\u0905\u092e\u093f\u0924 \u0915\u0941\u092e\u093e\u0930",
-      "\u092a\u094d\u0930\u093f\u092f\u093e \u0936\u0930\u094d\u092e\u093e",
-      "\u0930\u093e\u0939\u0941\u0932 \u0935\u0930\u094d\u092e\u093e",
-      "\u0938\u0941\u092e\u093f\u0924\u093e \u092e\u0947\u0939\u0924\u093e",
-      "\u0935\u093f\u0935\u0947\u0915 \u0917\u0941\u092a\u094d\u0924\u093e"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\u0905\u0928\u093f\u0932-\u0915\u0941\u092e\u093e\u0930",
-      "\u0938\u0940\u092e\u093e \u0915.",
-      "\u0930\u093e\u091c\u0947\u0936 \u092a\u094d\u0930\u0938\u093e\u0926",
-      "\u0936\u094d\u0930\u0940 \u0930\u093e\u092e",
-      "\u0905\u0928\u093f\u0915\u093e"
-    ]
-  },
-  "nameKorean": {
-    "valid": [
-      "\uae40\ubbfc\uc218",
-      "\uc774\uc9c0\uc740",
-      "\ubc15\uc9c4\uc6b0",
-      "\ucd5c\uc9c0\ud604",
-      "\uc815\uc608\ub9b0"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\ud64d \uae38\ub3d9",
-      "\ucd5c-\uc9c4\uc544",
-      "\uae40 \uc9c0\uc740",
-      "\uc720\ub098 \uac15",
-      "\uc131\uc9c4"
-    ]
-  },
-  "nameTurkish": {
-    "valid": [
-      "Mehmet \u00d6zt\u00fcrk",
-      "Ay\u015fe Demir",
-      "Ali \u015eahin",
-      "Zeynep Ayd\u0131n",
-      "Mustafa \u00c7elik"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\u0130lker \u00c7a\u011flar",
-      "Ahmet-\u015e\u00fckr\u00fc",
-      "Fatma N.",
-      "O\u011fuzhan \u0130nan",
-      "S\u0131la"
-    ]
-  },
-  "nameVietnamese": {
-    "valid": [
-      "Nguy\u1ec5n V\u0103n An",
-      "Tr\u1ea7n Th\u1ecb Mai",
-      "L\u00ea Quang Huy",
-      "Ph\u1ea1m Thu H\u1eb1ng",
-      "V\u0169 Minh Khoa"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\u0110\u1eb7ng-Th\u1ecb",
-      "Ho\u00e0ng V.",
-      "Ng\u00f4 \u0110\u1ee9c",
-      "Phan \u0110\u1ee9c Th\u1ecbnh",
-      "L\u00fd"
-    ]
-  },
-  "namePolish": {
-    "valid": [
-      "\u0141ukasz Nowak",
-      "Agnieszka Kowalska",
-      "Micha\u0142 Zieli\u0144ski",
-      "Katarzyna Wi\u015bniewska",
-      "Pawe\u0142 Wo\u017aniak"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "Jan-\u0141ukasz",
-      "K. \u017b\u00f3\u0142\u0107",
-      "Marek O'Kowalski",
-      "Anna-Maria",
-      "Iga"
-    ]
-  },
-  "nameUkrainian": {
-    "valid": [
-      "\u041e\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440 \u041f\u0435\u0442\u0440\u0435\u043d\u043a\u043e",
-      "\u041e\u043b\u0435\u043d\u0430 \u041a\u043e\u0432\u0430\u043b\u0435\u043d\u043a\u043e",
-      "\u0410\u043d\u0434\u0440\u0456\u0439 \u041c\u0435\u043b\u044c\u043d\u0438\u043a",
-      "\u041d\u0430\u0442\u0430\u043b\u0456\u044f \u0428\u0435\u0432\u0447\u0435\u043d\u043a\u043e",
-      "\u041c\u0430\u0440\u0456\u044f \u0411\u043e\u043d\u0434\u0430\u0440\u0435\u043d\u043a\u043e"
-    ],
-    "invalid": [
-      "",
-      "123",
-      "@@@",
-      "   ",
-      "<script>alert(1)</script>"
-    ],
-    "edge": [
-      "\u0404\u0432\u0433\u0435\u043d \u0427\u0443\u043c\u0430\u043a",
-      "\u041e\u043b\u0435\u043a\u0441\u0456\u0439-\u0411\u043e\u0433\u0434\u0430\u043d",
-      "\u0410\u043d\u043d\u0430 \u041c.",
-      "\u0414\u043c\u0438\u0442\u0440\u043e O'\u041c\u0435\u043b\u044c\u043d\u0438\u043a",
-      "\u041b\u0456\u0434\u0430"
-    ]
-  },
+  "name": [
+    "Zoe O'Connor",
+    "Jose Maria Gonzalez",
+    "Jean-Francois Muller",
+    "Oyvind As",
+    "Lukasz Dabrowski",
+    "\u5f20\u4f1f",
+    "\u0645\u062d\u0645\u062f \u0628\u0646 \u0639\u0628\u062f\u0627\u0644\u0644\u0647",
+    "A",
+    "Dr. Jane Smith Jr. III",
+    "O'Neill",
+    "van Beethoven",
+    "de la Cruz"
+  ],
+  "nameWelsh": [
+    "Siân Evans",
+    "Gwynfor Jones",
+    "Rhiannon Price",
+    "Eifion Davies",
+    "Catrin Hughes",
+    "Dafydd ap Gwilym",
+    "Llywelyn ab Iorwerth",
+    "Rhys-Owen",
+    "Siân-Jane",
+    "Ioan G."
+  ],
+  "nameJapanese": [
+    "山田太郎",
+    "佐藤花子",
+    "鈴木一郎",
+    "高橋美咲",
+    "田中健",
+    "中島 京子",
+    "大島-健太",
+    "長谷川",
+    "山本 太一",
+    "林　正雄"
+  ],
+  "nameChinese": [
+    "王伟",
+    "李娜",
+    "张敏",
+    "陈强",
+    "刘芳",
+    "欧阳娜娜",
+    "司马光",
+    "张 伟",
+    "赵-磊",
+    "梁 明"
+  ],
+  "nameSerbian": [
+    "Nikola Petrović",
+    "Milica Jovanović",
+    "Marko Đorđević",
+    "Jelena Stojanović",
+    "Aleksandar Ilić",
+    "Živko Ćosić",
+    "Marija-Anđela",
+    "Sava O'Nešić",
+    "Jovan Đ. Petrović",
+    "Ana-Maša"
+  ],
+  "nameBosnian": [
+    "Adnan Hadžić",
+    "Lejla Kovačević",
+    "Emir Džafić",
+    "Amina Šabić",
+    "Amar Bešić",
+    "Haris Đokić",
+    "Željka Omerović",
+    "Senad-Šehić",
+    "Ivana Š.Ćosić",
+    "Emina Šarić"
+  ],
+  "nameCroatian": [
+    "Ivan Horvat",
+    "Marija Kovačić",
+    "Luka Babić",
+    "Ana Marić",
+    "Petar Radić",
+    "Željko Šimić",
+    "Marin-Žrivković",
+    "Nina O'Kovačić",
+    "Dora Ž. Horvat",
+    "Iva Ćurić"
+  ],
+  "nameGreek": [
+    "Giorgos Papadopoulos",
+    "Eleni Nikolaou",
+    "Kostas Georgiou",
+    "Maria Dimitriou",
+    "Nikos Andreou",
+    "Γιώργος Παπαδόπουλος",
+    "Ελένη Νικολάου",
+    "K. Ανδρέου",
+    "Ioannis Ν.",
+    "Anna-Maria"
+  ],
+  "nameArabic": [
+    "أحمد علي",
+    "فاطمة الزهراء",
+    "محمد حسين",
+    "نور أحمد",
+    "سامي الحامد",
+    "ياسمين بن علي",
+    "أحمد-فارس",
+    "فاطمة ز.",
+    "محمد ابن سعيد",
+    "ليلى"
+  ],
+  "nameHindi": [
+    "अमित कुमार",
+    "प्रिया शर्मा",
+    "राहुल वर्मा",
+    "सुमिता मेहता",
+    "विवेक गुप्ता",
+    "अनिल-कुमार",
+    "सीमा क.",
+    "राजेश प्रसाद",
+    "श्री राम",
+    "अनिका"
+  ],
+  "nameKorean": [
+    "김민수",
+    "이지은",
+    "박진우",
+    "최지현",
+    "정예린",
+    "홍 길동",
+    "최-진아",
+    "김 지은",
+    "유나 강",
+    "성진"
+  ],
+  "nameTurkish": [
+    "Mehmet Öztürk",
+    "Ayşe Demir",
+    "Ali Şahin",
+    "Zeynep Aydın",
+    "Mustafa Çelik",
+    "İlker Çağlar",
+    "Ahmet-Şükrü",
+    "Fatma N.",
+    "Oğuzhan İnan",
+    "Sıla"
+  ],
+  "nameVietnamese": [
+    "Nguyễn Văn An",
+    "Trần Thị Mai",
+    "Lê Quang Huy",
+    "Phạm Thu Hằng",
+    "Vũ Minh Khoa",
+    "Đặng-Thị",
+    "Hoàng V.",
+    "Ngô Đức",
+    "Phan Đức Thịnh",
+    "Lý"
+  ],
+  "namePolish": [
+    "Łukasz Nowak",
+    "Agnieszka Kowalska",
+    "Michał Zieliński",
+    "Katarzyna Wiśniewska",
+    "Paweł Woźniak",
+    "Jan-Łukasz",
+    "K. żółć",
+    "Marek O'Kowalski",
+    "Anna-Maria",
+    "Iga"
+  ],
+  "nameUkrainian": [
+    "Олександр Петренко",
+    "Олена Коваленко",
+    "Андрій Мельник",
+    "Наталія Шевченко",
+    "Марія Бондаренко",
+    "Євген Чумак",
+    "Олексій-Богдан",
+    "Анна М.",
+    "Дмитро O'Мельник",
+    "Ліда"
+  ],
   "phone": {
     "valid": [
       "+44 7700 900123",
@@ -665,48 +499,170 @@
       "+1-202-555-0198"
     ]
   },
-  "creditCard": {
-    "valid": [
-      "4242424242424242",
-      "5555555555554444",
-      "378282246310005",
-      "6011111111111117"
-    ],
-    "invalid": [
-      "1234567890123456",
-      "0000000000000000",
-      "1111111111111111",
-      "4242424242424241"
-    ],
-    "edge": [
-      "4242 4242 4242 4242",
-      "4242-4242-4242-4242",
-      "4242424242424242 12/25",
-      "4242424242424242 12/25 123"
-    ]
+  "paymentCards": {
+    "visa": {
+      "valid": [
+        "4242424242424242",
+        "4000000000003220"
+      ],
+      "invalid": [
+        "4242424242424241"
+      ],
+      "edge": [
+        "4242 4242 4242 4242"
+      ]
+    },
+    "mastercard": {
+      "valid": [
+        "5555555555554444",
+        "5200828282828210"
+      ],
+      "invalid": [
+        "5555555555554445"
+      ],
+      "edge": [
+        "5555 5555 5555 4444"
+      ]
+    },
+    "amex": {
+      "valid": [
+        "378282246310005",
+        "340000000000009"
+      ],
+      "invalid": [
+        "37828224631000"
+      ],
+      "edge": [
+        "3782 822463 10005"
+      ]
+    },
+    "discover": {
+      "valid": [
+        "6011111111111117"
+      ],
+      "invalid": [
+        "6011111111111110"
+      ],
+      "edge": [
+        "6011 1111 1111 1117"
+      ]
+    },
+    "jcb": {
+      "valid": [
+        "3530111333300000"
+      ],
+      "invalid": [
+        "3530111333300001"
+      ],
+      "edge": [
+        "3530 1113 3330 0000"
+      ]
+    },
+    "diners": {
+      "valid": [
+        "30569309025904"
+      ],
+      "invalid": [
+        "30569309025905"
+      ],
+      "edge": [
+        "3056 930902 5904"
+      ]
+    }
   },
-  "cardByBrand": {
-    "valid": [
-      "Visa: 4242424242424242",
-      "Mastercard: 5555555555554444",
-      "Amex: 378282246310005",
-      "Discover: 6011111111111117",
-      "JCB: 3530111333300000",
-      "Diners: 30569309025904"
-    ],
-    "invalid": [
-      "Visa: 4242424242424241",
-      "Mastercard: 5555555555554445",
-      "Amex: 37828224631000",
-      "Discover: 6011111111111110"
-    ],
-    "edge": [
-      "Visa 3DS: 4000000000003220",
-      "Mastercard 3DS: 5200828282828210",
-      "Amex 3DS: 340000000000009",
-      "CVC=000",
-      "CVC=999"
-    ]
+  "paymentDirectDebit": {
+    "iban": {
+      "valid": [
+        "GB82WEST12345698765432",
+        "DE89370400440532013000",
+        "FR1420041010050500013M02606"
+      ],
+      "invalid": [
+        "GB82WEST1234569876543",
+        "DE893704004405320130000",
+        "INVALIDIBAN123"
+      ],
+      "edge": [
+        "GB82 WEST 1234 5698 7654 32",
+        "DE89 3704 0044 0532 0130 00"
+      ]
+    },
+    "unipaas": {
+      "valid": [
+        "Account 55779911 / Sort 200000",
+        "Account 55779911 / Sort 20-00-00"
+      ],
+      "invalid": [
+        "Account 12000000 / Sort 000001",
+        "Account 12000000 / Sort 00-00-01"
+      ],
+      "edge": [
+        "Account 55779911 / Sort 200000 (passes)",
+        "Account 12000000 / Sort 000001 (fails)"
+      ]
+    },
+    "stripeAccount": {
+      "valid": [
+        "000123456789",
+        "000111111113",
+        "000222222227",
+        "000333333335",
+        "000444444440",
+        "000555555559",
+        "000666666661",
+        "000777777771",
+        "000888888885",
+        "000000000009"
+      ],
+      "invalid": [
+        "000000000000",
+        "111111111111",
+        "999999999999"
+      ],
+      "edge": [
+        "000111111116",
+        "000000004954"
+      ]
+    },
+    "stripeToken": {
+      "valid": [
+        "pm_usBankAccount_success",
+        "pm_usBankAccount_accountClosed",
+        "pm_usBankAccount_riskLevelHighest",
+        "pm_usBankAccount_noAccount",
+        "pm_usBankAccount_insufficientFunds",
+        "pm_usBankAccount_debitNotAuthorized",
+        "pm_usBankAccount_invalidCurrency",
+        "pm_usBankAccount_failMicrodeposits",
+        "pm_usBankAccount_dispute",
+        "pm_usBankAccount_processing",
+        "pm_usBankAccount_weeklyLimitExceeded"
+      ],
+      "invalid": [
+        "pm_usBankAccount_invalid",
+        "pm_usBankAccount_failed"
+      ],
+      "edge": [
+        "pm_usBankAccount_success"
+      ]
+    },
+    "stripeMicrodeposit": {
+      "valid": [
+        "32",
+        "45",
+        "10",
+        "11",
+        "40",
+        "41"
+      ],
+      "invalid": [
+        "00",
+        "99"
+      ],
+      "edge": [
+        "01"
+      ]
+    }
   },
   "address": {
     "valid": [
@@ -904,7 +860,7 @@
       "mailto:test@example.com",
       "ftp://example.com/file",
       "https://example.com/space path",
-      "https://例え.テスト",
+      "https://\u4f8b\u5b50.\u6d4b\u8bd5",
       "https://example.com/%E2%9C%93"
     ]
   },
@@ -968,6 +924,82 @@
     "edge": [
       "GB82 WEST 1234 5698 7654 32",
       "DE89 3704 0044 0532 0130 00"
+    ]
+  },
+  "directDebitUnipaas": {
+    "valid": [
+      "Account 55779911 / Sort 200000",
+      "Account 55779911 / Sort 20-00-00"
+    ],
+    "invalid": [
+      "Account 12000000 / Sort 000001",
+      "Account 12000000 / Sort 00-00-01"
+    ],
+    "edge": [
+      "Account 55779911 / Sort 200000 (passes)",
+      "Account 12000000 / Sort 000001 (fails)"
+    ]
+  },
+  "directDebitStripeAccount": {
+    "valid": [
+      "000123456789",
+      "000111111113",
+      "000222222227",
+      "000333333335",
+      "000444444440",
+      "000555555559",
+      "000666666661",
+      "000777777771",
+      "000888888885",
+      "000000000009"
+    ],
+    "invalid": [
+      "000000000000",
+      "111111111111",
+      "999999999999"
+    ],
+    "edge": [
+      "000111111116",
+      "000000004954"
+    ]
+  },
+  "directDebitStripeToken": {
+    "valid": [
+      "pm_usBankAccount_success",
+      "pm_usBankAccount_accountClosed",
+      "pm_usBankAccount_riskLevelHighest",
+      "pm_usBankAccount_noAccount",
+      "pm_usBankAccount_insufficientFunds",
+      "pm_usBankAccount_debitNotAuthorized",
+      "pm_usBankAccount_invalidCurrency",
+      "pm_usBankAccount_failMicrodeposits",
+      "pm_usBankAccount_dispute",
+      "pm_usBankAccount_processing",
+      "pm_usBankAccount_weeklyLimitExceeded"
+    ],
+    "invalid": [
+      "pm_usBankAccount_invalid",
+      "pm_usBankAccount_failed"
+    ],
+    "edge": [
+      "pm_usBankAccount_success"
+    ]
+  },
+  "directDebitStripeMicrodeposit": {
+    "valid": [
+      "32",
+      "45",
+      "10",
+      "11",
+      "40",
+      "41"
+    ],
+    "invalid": [
+      "00",
+      "99"
+    ],
+    "edge": [
+      "01"
     ]
   },
   "iban": {
@@ -1355,27 +1387,137 @@
       "Español con acentos ñ"
     ]
   },
-  "lorem": {
-    "valid": [
+  "loremTypes": {
+    "standard": [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
       "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.",
-      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt."
-    ],
-    "invalid": [
-      "",
-      "<script>alert('lorem')</script>",
-      "Lorem ipsum \u0000 dolor",
-      "Lorem ipsum \ud800",
-      "Lorem ipsum \udc00"
-    ],
-    "edge": [
+      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.",
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate.",
       "Lorem ipsum — with em dash — punctuation.",
       "Lorem ipsum 12345 mixed numbers.",
       "Lorem ipsum 😃 emoji"
+    ],
+    "international": [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия.",
+      "وضع ابن الهيثم تصور واضح للعلاقة بين النموذج الرياضي المثالي ومنظومة الظواهر الملحوظة.",
+      "北京位於華北平原的西北边缘，背靠燕山，有永定河流经老城西南。",
+      "Příliš žluťoučký kůň úpěl ďábelské ódy",
+      "ทดสอบนะจ๊ะ",
+      "एक जल्दी भूरी लोमड़ी आलसी कुत्ते पर कूदता",
+      "Iñtërnâtiônàlizætiøn☃💪",
+      "Lorem ipsum dolor sit amet, Римский император Константин I Великий, 北京位於華北平原的西北边缘",
+      "Lorem ipsum — mixed punctuation — emojis 😃",
+      "Lorem ipsum 12345 with numbers"
+    ]
+  },
+  "loremSizes": {
+    "standard": [
+      {
+        "_type": "size",
+        "size": "128",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "129",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "256",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "257",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "32767",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "32768",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "32769",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "65535",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "65536",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        "_type": "size",
+        "size": "65537",
+        "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    ],
+    "international": [
+      {
+        "_type": "size",
+        "size": "128",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "129",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "256",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "257",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "32767",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "32768",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "32769",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "65535",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "65536",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      },
+      {
+        "_type": "size",
+        "size": "65537",
+        "template": "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия."
+      }
     ]
   },
   "symbolsExtended": {
@@ -1399,30 +1541,6 @@
       "—–-",
       "…⋯⋮",
       "←↑→↓"
-    ]
-  },
-  "bugmagnetLorems": {
-    "valid": [
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия.",
-      "وضع ابن الهيثم تصور واضح للعلاقة بين النموذج الرياضي المثالي ومنظومة الظواهر الملحوظة.",
-      "北京位於華北平原的西北边缘，背靠燕山，有永定河流经老城西南。",
-      "Příliš žluťoučký kůň úpěl ďábelské ódy",
-      "ทดสอบนะจ๊ะ",
-      "एक जल्दी भूरी लोमड़ी आलसी कुत्ते पर कूदता",
-      "Iñtërnâtiônàlizætiøn☃💪"
-    ],
-    "invalid": [
-      "",
-      "Lorem ipsum \u0000",
-      "Lorem ipsum \ud800",
-      "Lorem ipsum \udc00",
-      "<script>alert('lorem')</script>"
-    ],
-    "edge": [
-      "Lorem ipsum dolor sit amet, Римский император Константин I Великий, 北京位於華北平原的西北边缘",
-      "Lorem ipsum — mixed punctuation — emojis 😃",
-      "Lorem ipsum 12345 with numbers"
     ]
   },
   "bugmagnetNames": {
@@ -1716,36 +1834,6 @@
       "Stripe Card still added: 4000000000000341",
       "Spreedly address_line1_check fail: 4000000000000028",
       "Spreedly address_zip_check fail: 4000000000000036"
-    ]
-  },
-  "bugmagnetTextSize": {
-    "valid": [
-      { "_type": "size", "size": "128", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "129", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "256", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "257", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "32767", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "32768", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "32769", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "65535", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "65536", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-      { "_type": "size", "size": "65537", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." }
-    ],
-    "invalid": [
-      { "_type": "size", "size": "0", "template": "Lorem ipsum" },
-      { "_type": "size", "size": "-1", "template": "Lorem ipsum" }
-    ],
-    "edge": [
-      { "_type": "size", "size": "128", "template": "0123456789" },
-      { "_type": "size", "size": "129", "template": "0123456789" },
-      { "_type": "size", "size": "256", "template": "0123456789" },
-      { "_type": "size", "size": "257", "template": "0123456789" },
-      { "_type": "size", "size": "32767", "template": "0123456789" },
-      { "_type": "size", "size": "32768", "template": "0123456789" },
-      { "_type": "size", "size": "32769", "template": "0123456789" },
-      { "_type": "size", "size": "65535", "template": "0123456789" },
-      { "_type": "size", "size": "65536", "template": "0123456789" },
-      { "_type": "size", "size": "65537", "template": "0123456789" }
     ]
   },
   "ip": {

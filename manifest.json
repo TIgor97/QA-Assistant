@@ -8,7 +8,8 @@
     "contextMenus",
     "storage",
     "scripting",
-    "downloads"
+    "downloads",
+    "sidePanel"
   ],
   "web_accessible_resources": [
     {
@@ -30,8 +31,10 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_title": "QA Testing Assistant"
+  },
+  "side_panel": {
+    "default_path": "popup.html"
   },
   "content_scripts": [
     {
