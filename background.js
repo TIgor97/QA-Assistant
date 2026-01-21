@@ -1,10 +1,27 @@
 const MAX_ITEMS_PER_VARIANT = 8;
 let testData = {};
+let typoAssetsCache = null;
 
 async function loadTestData() {
   const url = chrome.runtime.getURL("test-data.json");
   const res = await fetch(url);
   testData = await res.json();
+}
+
+async function fetchTypoAssets() {
+  if (typoAssetsCache) return typoAssetsCache;
+  const [sourceRes, affRes, dicRes] = await Promise.all([
+    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/typo.min.js"),
+    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/dictionaries/en_US/en_US.aff"),
+    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/dictionaries/en_US/en_US.dic")
+  ]);
+  const [source, aff, dic] = await Promise.all([
+    sourceRes.text(),
+    affRes.text(),
+    dicRes.text()
+  ]);
+  typoAssetsCache = { source, aff, dic };
+  return typoAssetsCache;
 }
 
 function createTestDataMenus(parentId) {
@@ -350,6 +367,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg?.type === "QA_GET_TYPO_ASSETS") {
+    fetchTypoAssets()
+      .then((assets) => sendResponse({ ok: true, assets }))
+      .catch((error) => sendResponse({ ok: false, error: String(error) }));
+    return true;
+  }
+
   if (msg?.type === "QA_SELECTOR_PICKED") {
     chrome.storage.session.set({
       lastSelector: msg.selector,

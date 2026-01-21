@@ -131,22 +131,19 @@ function showTypoNotification(message, color) {
 
 async function loadTypoDictionary() {
   if (window.__qaTypoDictionary) return window.__qaTypoDictionary;
-  if (!window.Typo) {
-    await new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/npm/typo-js@1.2.3/typo.min.js";
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
+  const response = await chrome.runtime.sendMessage({ type: "QA_GET_TYPO_ASSETS" });
+  if (!response?.ok || !response.assets) {
+    throw new Error(response?.error || "Typo assets unavailable");
   }
 
-  const [affRes, dicRes] = await Promise.all([
-    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/dictionaries/en_US/en_US.aff"),
-    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/dictionaries/en_US/en_US.dic")
-  ]);
-  const [aff, dic] = await Promise.all([affRes.text(), dicRes.text()]);
-  window.__qaTypoDictionary = new window.Typo("en_US", aff, dic);
+  if (!window.Typo) {
+    const script = document.createElement("script");
+    script.textContent = response.assets.source;
+    document.documentElement.appendChild(script);
+    script.remove();
+  }
+
+  window.__qaTypoDictionary = new window.Typo("en_US", response.assets.aff, response.assets.dic);
   return window.__qaTypoDictionary;
 }
 
@@ -248,7 +245,7 @@ async function runTypoScan() {
     walkNodesForTypos(document.body, dictionary);
     showTypoNotification("Typo checking complete! Click again to remove highlights.", "#4CAF50");
   } catch (error) {
-    showTypoNotification("Typo scan failed to load dictionary.", "#d32f2f");
+    showTypoNotification("Typo scan failed to load dictionary. Check network/CSP.", "#d32f2f");
   }
 }
 
