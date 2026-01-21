@@ -1,0 +1,3 @@
+html.qa-picker-active, html.qa-picker-active * {
+  cursor: crosshair !important;
+}

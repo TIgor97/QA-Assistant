@@ -1,0 +1,1659 @@
+{
+  "email": {
+    "valid": [
+      "qa.user+valid@example.com",
+      "user.tag+test@domain.co.uk",
+      "user.name@example-domain.com",
+      "firstname.lastname@company.org",
+      "email@sub.domain.example.com",
+      "user+tag@company.io",
+      "simple@example.net"
+    ],
+    "invalid": [
+      "plainaddress",
+      "@missing-local.org",
+      "username@.com",
+      "username@yahoo..com",
+      "email@domain@domain.com"
+    ],
+    "edge": [
+      "a@b.c",
+      "user+space @example.com",
+      "\"user name\"@example.com",
+      "user%example.com@example.com",
+      "user@127.0.0.1",
+      "user@[IPv6:2001:db8::1]"
+    ]
+  },
+  "bugmagnetStripeBoundary": {
+    "valid": [
+      "4000000000000077",
+      "4000000000000010",
+      "4000000000000028",
+      "4000000000000036",
+      "4000000000000044",
+      "4000000000000101"
+    ],
+    "invalid": [
+      "4000000000000002",
+      "4100000000000019",
+      "4000000000000127",
+      "4000000000000069",
+      "4000000000000119"
+    ],
+    "edge": [
+      "4000000000000341",
+      "4000000000000077",
+      "4000000000000101"
+    ]
+  },
+  "bugmagnetSpreedlyBoundary": {
+    "valid": [
+      "4000000000000077",
+      "4000000000000010",
+      "4000000000000028",
+      "4000000000000036",
+      "4000000000000044",
+      "4000000000000101"
+    ],
+    "invalid": [
+      "4012888888881881",
+      "5105105105105100",
+      "371449635398431"
+    ],
+    "edge": [
+      "4000000000000028",
+      "4000000000000036"
+    ]
+  },
+  "bugmagnetAuthorizeNetZip": {
+    "valid": [
+      "46282",
+      "46203",
+      "46207",
+      "46204"
+    ],
+    "invalid": [
+      "00000",
+      "123",
+      "ABCDE"
+    ],
+    "edge": [
+      "46282",
+      "46207"
+    ]
+  },
+  "bugmagnetAuthorizeNetCvv": {
+    "valid": [
+      "900",
+      "901",
+      "46207"
+    ],
+    "invalid": [
+      "",
+      "12",
+      "abcd"
+    ],
+    "edge": [
+      "000",
+      "999"
+    ]
+  },
+  "bugmagnetVantivCvv": {
+    "valid": [
+      "352",
+      "358",
+      "349",
+      "350"
+    ],
+    "invalid": [
+      "",
+      "12",
+      "abcd"
+    ],
+    "edge": [
+      "000",
+      "999"
+    ]
+  },
+  "bugmagnetPaypalCards": {
+    "valid": [
+      "5019717010103742",
+      "378282246310005",
+      "4111111111111111",
+      "6011000990139424",
+      "5555555555554444",
+      "3566002020360505"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "0000000000000000"
+    ],
+    "edge": [
+      "4222222222222",
+      "6331101999990016",
+      "5610591081018250",
+      "76009244561"
+    ]
+  },
+  "boundary": {
+    "valid": [
+      "0",
+      "1",
+      "-1",
+      "2147483647",
+      "-2147483648"
+    ],
+    "invalid": [
+      "2147483648",
+      "-2147483649",
+      "999999999999999999999",
+      "-999999999999999999999",
+      "NaN"
+    ],
+    "edge": [
+      "-0",
+      "0000",
+      "9223372036854775807",
+      "-9223372036854775808",
+      "1e999"
+    ]
+  },
+  "controlChars": {
+    "valid": [
+      "tab\tchar",
+      "newline\nchar",
+      "carriage\rreturn",
+      "bell\u0007",
+      "null\u0000char"
+    ],
+    "invalid": [
+      "\u0000",
+      "\u0001",
+      "\u001f",
+      "\u007f",
+      "\u0080"
+    ],
+    "edge": [
+      "mix\u0000ed",
+      "\u000bvertical",
+      "\u000cline",
+      "\u001bescape",
+      "\u009fcontrol"
+    ]
+  },
+  "json": {
+    "valid": [
+      "{}",
+      "[]",
+      "{\"a\":1}",
+      "{\"name\":\"test\"}",
+      "{\"arr\":[1,2,3]}"
+    ],
+    "invalid": [
+      "{",
+      "[",
+      "{\"a\":}",
+      "{\"a\":1,}",
+      "{\"a\": 'b'}"
+    ],
+    "edge": [
+      "null",
+      "true",
+      "\"string\"",
+      "{\"nested\":{\"a\":{\"b\":2}}}",
+      "[{\"a\":1},{\"b\":2}]"
+    ]
+  },
+  "urlSchemes": {
+    "valid": [
+      "http://example.com",
+      "https://example.com",
+      "mailto:test@example.com",
+      "tel:+12025550123",
+      "ftp://example.com/file"
+    ],
+    "invalid": [
+      "javascript:alert(1)",
+      "data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==",
+      "file:///etc/passwd",
+      "chrome://settings",
+      "about:blank"
+    ],
+    "edge": [
+      "custom-scheme://test",
+      "sms:+12025550123",
+      "geo:37.786971,-122.399677",
+      "intent://scan/#Intent;scheme=zxing;end",
+      "ws://example.com"
+    ]
+  },
+  "emailUnicode": {
+    "valid": [
+      "用户@例子.广告",
+      "δοκιμή@παράδειγμα.δοκιμή",
+      "почта@пример.рф",
+      "उदाहरण@परीक्षा.भारत",
+      "ümlaut@beispiel.de"
+    ],
+    "invalid": [
+      "用户@@例子.广告",
+      "δοκιμή@",
+      "@пример.рф",
+      "उदाहरण@परीक्षा",
+      "ümlaut@"
+    ],
+    "edge": [
+      "xn--fsq@xn--0zwm56d",
+      "test@例子.测试",
+      "emoji📧@example.com",
+      "a@例.测试",
+      "x@y.z"
+    ]
+  },
+  "regex": {
+    "valid": [
+      "^[a-z]+$",
+      "\\d{3}-\\d{2}-\\d{4}",
+      "[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}",
+      "\"^\\w+$\"",
+      "\"(foo|bar)\""
+    ],
+    "invalid": [
+      "(",
+      "[",
+      "\\",
+      "{1,",
+      "(.*"
+    ],
+    "edge": [
+      "(?i)case",
+      "(?<=a)b",
+      "(?:test){100}",
+      "(a+)+$",
+      "^$"
+    ]
+  },
+  "largeText": {
+    "valid": [
+      "Short text",
+      "Medium length text with several words",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+    ],
+    "invalid": [
+      "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+      "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+    ],
+    "edge": [
+      "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH",
+      "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
+    ]
+  },
+  "name": {
+    "valid": [
+      "Zoe O'Connor",
+      "Jose Maria Gonzalez",
+      "Jean-Francois Muller",
+      "Oyvind As",
+      "Lukasz Dabrowski",
+      "\u5f20\u4f1f",
+      "\u0645\u062d\u0645\u062f \u0628\u0646 \u0639\u0628\u062f\u0627\u0644\u0644\u0647"
+    ],
+    "invalid": [
+      "",
+      "   ",
+      "12345",
+      "!@#$%",
+      "<script>alert('xss')</script>",
+      "'; DROP TABLE users; --"
+    ],
+    "edge": [
+      "A",
+      "Dr. Jane Smith Jr. III",
+      "O'Neill",
+      "van Beethoven",
+      "de la Cruz"
+    ]
+  },
+  "phone": {
+    "valid": [
+      "+44 7700 900123",
+      "+1 (555) 123-4567",
+      "+49 30 12345678",
+      "+81 3-1234-5678",
+      "+91 98765 43210",
+      "+353 1 234 5678"
+    ],
+    "invalid": [
+      "123",
+      "abc-def-ghij",
+      "555-5555",
+      "phone",
+      "null"
+    ],
+    "edge": [
+      "555.123.4567",
+      "(555) 123-4567",
+      "555-123-4567 ext. 123",
+      "tel:+1-555-123-4567",
+      "sip:5551234567@example.com",
+      "+1-202-555-0198"
+    ]
+  },
+  "creditCard": {
+    "valid": [
+      "4242424242424242",
+      "5555555555554444",
+      "378282246310005",
+      "6011111111111117"
+    ],
+    "invalid": [
+      "1234567890123456",
+      "0000000000000000",
+      "1111111111111111",
+      "4242424242424241"
+    ],
+    "edge": [
+      "4242 4242 4242 4242",
+      "4242-4242-4242-4242",
+      "4242424242424242 12/25",
+      "4242424242424242 12/25 123"
+    ]
+  },
+  "cardByBrand": {
+    "valid": [
+      "Visa: 4242424242424242",
+      "Mastercard: 5555555555554444",
+      "Amex: 378282246310005",
+      "Discover: 6011111111111117",
+      "JCB: 3530111333300000",
+      "Diners: 30569309025904"
+    ],
+    "invalid": [
+      "Visa: 4242424242424241",
+      "Mastercard: 5555555555554445",
+      "Amex: 37828224631000",
+      "Discover: 6011111111111110"
+    ],
+    "edge": [
+      "Visa 3DS: 4000000000003220",
+      "Mastercard 3DS: 5200828282828210",
+      "Amex 3DS: 340000000000009",
+      "CVC=000",
+      "CVC=999"
+    ]
+  },
+  "address": {
+    "valid": [
+      "221B Baker Street, London NW1 6XE, UK",
+      "1600 Pennsylvania Ave NW, Washington, DC 20500",
+      "1 Infinite Loop, Cupertino, CA 95014",
+      "123 Main St, Springfield, IL 62704"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "Main St",
+      "123 Main St, Anytown"
+    ],
+    "edge": [
+      "Apt 4B, 123 Main St, Anytown, ST 12345",
+      "PO Box 123, Anytown, ST 12345",
+      "Suite 100, 123 Main St, Anytown, ST 12345",
+      "123 Main St, Springfield, IL 62704-1234"
+    ]
+  },
+  "addressLocale": {
+    "valid": [
+      "10 Downing St, London SW1A 2AA, UK",
+      "Unter den Linden 77, 10117 Berlin, Germany",
+      "4 Chome-2-8 Shibakoen, Minato City, Tokyo 105-0011, Japan",
+      "1-2-3 Shibuya, Shibuya-ku, Tokyo 150-0002, Japan",
+      "Avenida Paulista, 1578 - Bela Vista, Sao Paulo - SP, 01310-200, Brazil",
+      "Rue de Rivoli, 75001 Paris, France"
+    ],
+    "invalid": [
+      "No street, No city",
+      "1234",
+      "City only",
+      "Street only",
+      "PO"
+    ],
+    "edge": [
+      "Apartment 12, 45 Rue du Faubourg Saint-Honore, 75008 Paris, France",
+      "Flat 3B, 14 Gower St, London WC1E 6HF, UK",
+      "Unit 5, 25 George St, Sydney NSW 2000, Australia",
+      "Carrera 7 # 71-52, Bogota, Colombia"
+    ]
+  },
+  "nationalId": {
+    "valid": [
+      "US SSN: 123-45-6789",
+      "UK NIN: QQ123456C",
+      "DE Tax ID: 12 345 678 901",
+      "FR INSEE: 1 84 12 76 451 089 46",
+      "ES DNI: 12345678Z"
+    ],
+    "invalid": [
+      "SSN: 000-00-0000",
+      "NIN: 1234567",
+      "Tax: ABC",
+      "DNI: 1234567",
+      "INSEE: 123"
+    ],
+    "edge": [
+      "US SSN: 078-05-1120",
+      "UK NIN: AB123456C",
+      "ES NIE: X1234567T",
+      "IT Codice Fiscale: RSSMRA85T10A562S"
+    ]
+  },
+  "vat": {
+    "valid": [
+      "GB999 9999 73",
+      "DE123456789",
+      "FRXX999999999",
+      "ESX1234567X",
+      "IT12345678901"
+    ],
+    "invalid": [
+      "GB123",
+      "DE000000000",
+      "FR123",
+      "ES123",
+      "IT123"
+    ],
+    "edge": [
+      "GB999999973",
+      "DE 123 456 789",
+      "FR XX 999999999"
+    ]
+  },
+  "passport": {
+    "valid": [
+      "US: 123456789",
+      "UK: 123456789",
+      "DE: C01X00T2",
+      "IN: A1234567",
+      "CA: AA123456"
+    ],
+    "invalid": [
+      "US: 12345",
+      "UK: ABC",
+      "DE: 123",
+      "IN: 12345678",
+      "CA: 1"
+    ],
+    "edge": [
+      "US: 000000000",
+      "UK: 000000000",
+      "DE: T22000129",
+      "IN: Z0000000"
+    ]
+  },
+  "username": {
+    "valid": [
+      "qa_user",
+      "qa.user",
+      "user_123",
+      "john-doe",
+      "alice"
+    ],
+    "invalid": [
+      "",
+      "   ",
+      "@user",
+      "user!",
+      "thisusernameiswaytoolongfortypicalsystems"
+    ],
+    "edge": [
+      "UserName",
+      "user.name+tag",
+      "user__name",
+      "user..name",
+      "user-name"
+    ]
+  },
+  "password": {
+    "valid": [
+      "P@ssw0rd!",
+      "Str0ng#Pass2025",
+      "C0mpl3x$Value",
+      "LongerPassphraseWithSpaces",
+      "Mix3d-Cas3_123"
+    ],
+    "invalid": [
+      "123456",
+      "password",
+      "letmein",
+      "qwerty",
+      "short"
+    ],
+    "edge": [
+      "with space",
+      "\"quoted\"",
+      "emoji-\ud83d\udd12",
+      "tab\tvalue",
+      "newline\nvalue"
+    ]
+  },
+  "number": {
+    "valid": [
+      "0",
+      "1",
+      "42",
+      "-1",
+      "999999"
+    ],
+    "invalid": [
+      "",
+      "NaN",
+      "Infinity",
+      "1,234",
+      "1.2.3"
+    ],
+    "edge": [
+      "-0",
+      "00042",
+      "3.14159",
+      "-999999999",
+      "1e6"
+    ]
+  },
+  "url": {
+    "valid": [
+      "https://example.com",
+      "https://sub.domain.example.com/path?query=1",
+      "http://localhost:3000",
+      "https://example.com/#hash",
+      "https://example.com/path/to/resource"
+    ],
+    "invalid": [
+      "htp://example.com",
+      "//example.com",
+      "example.com",
+      "http:///example.com",
+      "http://"
+    ],
+    "edge": [
+      "mailto:test@example.com",
+      "ftp://example.com/file",
+      "https://example.com/space path",
+      "https://例え.テスト",
+      "https://example.com/%E2%9C%93"
+    ]
+  },
+  "postalCode": {
+    "valid": [
+      "SW1A 1AA",
+      "90210",
+      "10115",
+      "75008",
+      "100-0001"
+    ],
+    "invalid": [
+      "ABCDE",
+      "123",
+      "99999-999",
+      "SW1A",
+      "!@#"
+    ],
+    "edge": [
+      "SW1A 0AA",
+      "02115",
+      "D02 X285",
+      "H1A 0A1",
+      "10000-0000"
+    ]
+  },
+  "country": {
+    "valid": [
+      "United Kingdom",
+      "United States",
+      "Germany",
+      "Brazil",
+      "Japan"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "Narnia",
+      "Atlantis",
+      "U$A"
+    ],
+    "edge": [
+      "C\u00f4te d'Ivoire",
+      "Timor-Leste",
+      "Cura\u00e7ao",
+      "Saint Kitts and Nevis",
+      "North Macedonia"
+    ]
+  },
+  "directDebit": {
+    "valid": [
+      "GB82WEST12345698765432",
+      "FR1420041010050500013M02606",
+      "DE89370400440532013000"
+    ],
+    "invalid": [
+      "GB82WEST1234569876543",
+      "INVALID-IBAN",
+      "123456"
+    ],
+    "edge": [
+      "GB82 WEST 1234 5698 7654 32",
+      "DE89 3704 0044 0532 0130 00"
+    ]
+  },
+  "iban": {
+    "valid": [
+      "GB82WEST12345698765432",
+      "DE89370400440532013000",
+      "FR1420041010050500013M02606"
+    ],
+    "invalid": [
+      "GB82WEST1234569876543",
+      "DE893704004405320130000",
+      "INVALIDIBAN123"
+    ],
+    "edge": [
+      "GB82 WEST 1234 5698 7654 32",
+      "DE89 3704 0044 0532 0130 00"
+    ]
+  },
+  "bic": {
+    "valid": [
+      "DEUTDEFF",
+      "NEDSZAJJ",
+      "BOFAUS3N"
+    ],
+    "invalid": [
+      "DEUTDE",
+      "12345678",
+      "INVALIDBIC"
+    ],
+    "edge": [
+      "DEUTDEFF500",
+      "NEDSZAJJXXX"
+    ]
+  },
+  "date": {
+    "valid": [
+      "2024-02-29",
+      "1999-12-31",
+      "2025-01-01"
+    ],
+    "invalid": [
+      "2024-02-30",
+      "2023-13-01",
+      "2023-00-10"
+    ],
+    "edge": [
+      "0001-01-01",
+      "9999-12-31",
+      "2024-03-10T02:30:00"
+    ]
+  },
+  "currency": {
+    "valid": [
+      "1,234.56",
+      "1.234,56",
+      "$1,234.56",
+      "€1.234,56",
+      "£1,234.56"
+    ],
+    "invalid": [
+      "12,34,56",
+      "1.234.56",
+      "$-",
+      "ABC"
+    ],
+    "edge": [
+      "0",
+      "0.00",
+      "-1",
+      "1e3"
+    ]
+  },
+  "currencyLocale": {
+    "valid": [
+      "USD 1,234.56",
+      "EUR 1.234,56",
+      "JPY ¥123,456",
+      "CHF 1'234.50",
+      "SEK 1 234,56"
+    ],
+    "invalid": [
+      "USD 1,23,4",
+      "EUR 1.234.5",
+      "JPY 12.34.56",
+      "CHF 12''345",
+      "SEK 1234,"
+    ],
+    "edge": [
+      "USD 0",
+      "EUR -1,00",
+      "JPY 0",
+      "CHF 9999999.99",
+      "SEK 1 234 567,89"
+    ]
+  },
+  "whitespace": {
+    "valid": [
+      " leading",
+      "trailing ",
+      " multiple   spaces ",
+      "\tTabbed",
+      "Line\nbreak"
+    ],
+    "invalid": [
+      "",
+      " ",
+      "\n",
+      "\t",
+      "\r\n"
+    ],
+    "edge": [
+      "\u00a0Non-breaking space",
+      "Zero\u200bWidth",
+      "\u2028Line sep",
+      "\u2029Paragraph sep",
+      "\u2003Em space"
+    ]
+  },
+  "decimal": {
+    "valid": [
+      "0.1",
+      "1.00",
+      "-0.01",
+      "1234.567",
+      "3.14159"
+    ],
+    "invalid": [
+      "1,0",
+      "1.2.3",
+      "-.",
+      "..1",
+      "1..0"
+    ],
+    "edge": [
+      "0",
+      "-0",
+      "9999999999.99",
+      "1e-3",
+      "1e309"
+    ]
+  },
+  "unicode": {
+    "valid": [
+      "Pokémon",
+      "Crème brûlée",
+      "中文測試",
+      "Добрый день",
+      "Español"
+    ],
+    "invalid": [
+      "\ud800",
+      "\udc00",
+      "\uffff",
+      "\u0000",
+      "\u0008"
+    ],
+    "edge": [
+      "Zalgo t̷̍͊̎͂",
+      "Combining e\u0301",
+      "RTL \u202e text",
+      "Emoji \ud83d\ude00",
+      "\u2066LTR isolate\u2069"
+    ]
+  },
+  "html": {
+    "valid": [
+      "<b>bold</b>",
+      "<i>italic</i>",
+      "<div>content</div>",
+      "<a href=\"#\">link</a>",
+      "<p>paragraph</p>"
+    ],
+    "invalid": [
+      "<script>",
+      "</div>",
+      "<img src=x>",
+      "<div",
+      "<b><i>"
+    ],
+    "edge": [
+      "<svg/onload=alert(1)>",
+      "<math><mi>x</mi></math>",
+      "<iframe src=javascript:alert(1)>",
+      "<img src=x onerror=alert(1)>",
+      "<body onload=alert(1)>"
+    ]
+  },
+  "file": {
+    "valid": [
+      "document.pdf",
+      "photo.png",
+      "report-2024.xlsx",
+      "archive.zip",
+      "notes.txt"
+    ],
+    "invalid": [
+      "..\\..\\secret.txt",
+      "C:\\Windows\\System32\\drivers\\etc\\hosts",
+      "/etc/passwd",
+      "file:///etc/passwd",
+      "..%2f..%2fetc%2fpasswd"
+    ],
+    "edge": [
+      "very-long-file-name-very-long-file-name-very-long-file-name-very-long-file-name-very-long-file-name-",
+      "photo..png",
+      "image .jpg",
+      "file.tar.gz",
+      "noextension"
+    ]
+  },
+  "emoji": {
+    "valid": [
+      "😀",
+      "💳",
+      "🧪",
+      "🇯🇵",
+      "👩‍💻"
+    ],
+    "invalid": [
+      "\ud83d",
+      "\ude00",
+      "\ud83d\udc00",
+      "\ud83d\udead",
+      "\ud83d\ud83d"
+    ],
+    "edge": [
+      "🏳️‍🌈",
+      "👨‍👩‍👧‍👦",
+      "👩🏽‍🔧",
+      "🏴‍☠️",
+      "💥"
+    ]
+  },
+  "phoneIntl": {
+    "valid": [
+      "+1 202-555-0188",
+      "+44 20 7946 0018",
+      "+33 1 42 68 53 00",
+      "+49 30 123456",
+      "+61 2 9374 4000"
+    ],
+    "invalid": [
+      "+99 123",
+      "+1 000 000 0000",
+      "++44 20 7946 0018",
+      "+44 (0) 2079460018",
+      "tel:123"
+    ],
+    "edge": [
+      "+81-3-1234-5678",
+      "+86 10 1234 5678",
+      "+55 11 99999-0000",
+      "+7 495 123-45-67",
+      "+971 4 123 4567"
+    ]
+  },
+  "sql": {
+    "valid": [
+      "SELECT * FROM users;",
+      "INSERT INTO table (a) VALUES (1);",
+      "UPDATE users SET name='a';",
+      "DELETE FROM users WHERE id=1;",
+      "SELECT 1;"
+    ],
+    "invalid": [
+      "SELECT * FROM",
+      "INSERT INTO",
+      "DROP TABLE",
+      "SELECT * FROM users WHERE id='",
+      "UNION SELECT"
+    ],
+    "edge": [
+      "' OR 1=1 --",
+      "\"; DROP TABLE users; --",
+      "admin' OR '1'='1",
+      "1; EXEC xp_cmdshell('dir');",
+      "'; WAITFOR DELAY '0:0:5'--"
+    ]
+  },
+  "xss": {
+    "valid": [
+      "<b>safe</b>",
+      "<span>text</span>",
+      "<em>ok</em>",
+      "<strong>safe</strong>",
+      "<u>underline</u>"
+    ],
+    "invalid": [
+      "<script>alert(1)</script>",
+      "<img src=x onerror=alert(1)>",
+      "<svg onload=alert(1)>",
+      "\" onmouseover=alert(1) x=\"",
+      "<iframe src=javascript:alert(1)></iframe>"
+    ],
+    "edge": [
+      "<math><mi>x</mi></math>",
+      "<body onload=alert(1)>",
+      "<video><source onerror=alert(1)>",
+      "<details open ontoggle=alert(1)>",
+      "</textarea><script>alert(1)</script>"
+    ]
+  },
+  "symbols": {
+    "valid": [
+      "!@#$%^&*()",
+      "-_=+[]{}",
+      "|;:'\",.<>?",
+      "`~",
+      "/\\"
+    ],
+    "invalid": [
+      "\u0000",
+      "\u001f",
+      "\u007f",
+      "\u202e",
+      "\u2066"
+    ],
+    "edge": [
+      "©®™",
+      "§¶•",
+      "±×÷",
+      "∞≈≠",
+      "★☆✓"
+    ]
+  },
+  "language": {
+    "valid": [
+      "English",
+      "Español",
+      "Deutsch",
+      "Français",
+      "Português",
+      "Italiano",
+      "Русский",
+      "العربية",
+      "עברית",
+      "हिन्दी",
+      "বাংলা",
+      "தமிழ்",
+      "ไทย",
+      "中文",
+      "日本語",
+      "한국어"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "lang@@",
+      "\u0000",
+      "N/A"
+    ],
+    "edge": [
+      "English (US)",
+      "Português (Brasil)",
+      "中文 (繁體)",
+      "العربية (مصر)",
+      "Español (LatAm)"
+    ]
+  },
+  "foreignLanguage": {
+    "valid": [
+      "Здравствуйте! Как дела?",
+      "مرحبا بالعالم",
+      "שלום עולם",
+      "नमस्ते दुनिया",
+      "สวัสดีชาวโลก",
+      "你好，世界",
+      "こんにちは世界",
+      "안녕하세요 세계",
+      "Olá mundo",
+      "Bonjour le monde"
+    ],
+    "invalid": [
+      "\u0000Hello",
+      "\u202eRTL override",
+      "\u001fcontrol",
+      "\ud800",
+      "\udc00"
+    ],
+    "edge": [
+      "أهلاً وسهلاً — test",
+      "こんにちは — mixed English",
+      "中文 mixed English",
+      "שלום — RTL + LTR",
+      "Español con acentos ñ"
+    ]
+  },
+  "lorem": {
+    "valid": [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.",
+      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt."
+    ],
+    "invalid": [
+      "",
+      "<script>alert('lorem')</script>",
+      "Lorem ipsum \u0000 dolor",
+      "Lorem ipsum \ud800",
+      "Lorem ipsum \udc00"
+    ],
+    "edge": [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate.",
+      "Lorem ipsum — with em dash — punctuation.",
+      "Lorem ipsum 12345 mixed numbers.",
+      "Lorem ipsum 😃 emoji"
+    ]
+  },
+  "symbolsExtended": {
+    "valid": [
+      "¢£¥€₹₩₽",
+      "©®™✓✗",
+      "≈≠≤≥±∞",
+      "•◦◯◇□",
+      "♪♫♩♬"
+    ],
+    "invalid": [
+      "\u0000",
+      "\u0001",
+      "\u001f",
+      "\u007f",
+      "\uffff"
+    ],
+    "edge": [
+      "§§§",
+      "¶¶¶",
+      "—–-",
+      "…⋯⋮",
+      "←↑→↓"
+    ]
+  },
+  "bugmagnetLorems": {
+    "valid": [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Римский император Константин I Великий по достоинству оценил выгодное местоположение приморского Византия.",
+      "وضع ابن الهيثم تصور واضح للعلاقة بين النموذج الرياضي المثالي ومنظومة الظواهر الملحوظة.",
+      "北京位於華北平原的西北边缘，背靠燕山，有永定河流经老城西南。",
+      "Příliš žluťoučký kůň úpěl ďábelské ódy",
+      "ทดสอบนะจ๊ะ",
+      "एक जल्दी भूरी लोमड़ी आलसी कुत्ते पर कूदता",
+      "Iñtërnâtiônàlizætiøn☃💪"
+    ],
+    "invalid": [
+      "",
+      "Lorem ipsum \u0000",
+      "Lorem ipsum \ud800",
+      "Lorem ipsum \udc00",
+      "<script>alert('lorem')</script>"
+    ],
+    "edge": [
+      "Lorem ipsum dolor sit amet, Римский император Константин I Великий, 北京位於華北平原的西北边缘",
+      "Lorem ipsum — mixed punctuation — emojis 😃",
+      "Lorem ipsum 12345 with numbers"
+    ]
+  },
+  "bugmagnetNames": {
+    "valid": [
+      "John O'Grady",
+      "José Casal-Giménez",
+      "María-Jose Carreño Quiñones",
+      "Björk Guðmundsdóttir",
+      "Nguyễn Tấn Dũng",
+      "田中太郎",
+      "Борис Николаевич Ельцин",
+      "ابن خلدون"
+    ],
+    "invalid": [
+      "Null",
+      "nil",
+      "false",
+      "12345",
+      ""
+    ],
+    "edge": [
+      "Rosalind Arusha Arkadina Altalune Florence Thurman-Busson",
+      "Alasdair Mór Ùisdean GillEasbaig 'ic Iain Mac a' Ghobhainn Fear an t-Srònaich",
+      "John James \"Jimmy\" O'Grady",
+      "Keihanaikukauakahihuliheʻekahaunaele"
+    ]
+  },
+  "bugmagnetPostCodes": {
+    "valid": [
+      "EC11AA",
+      "EC1 1AA",
+      "5004",
+      "340",
+      "1193653471"
+    ],
+    "invalid": [
+      "",
+      "ABCDE",
+      "123",
+      "!!!",
+      "-"
+    ],
+    "edge": [
+      "SW1A 1AA",
+      "02115",
+      "D02 X285",
+      "H1A 0A1"
+    ]
+  },
+  "bugmagnetCities": {
+    "valid": [
+      "Ærøskøbing",
+      "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch",
+      "Å",
+      "Y"
+    ],
+    "invalid": [
+      "",
+      "1234",
+      "@@",
+      "City"
+    ],
+    "edge": [
+      "São Paulo",
+      "München",
+      "Zürich",
+      "Kraków"
+    ]
+  },
+  "bugmagnetEmails": {
+    "valid": [
+      "email@domain.com",
+      "firstname.lastname@domain.com",
+      "email@subdomain.domain.com",
+      "firstname+lastname@domain.com",
+      "email@[123.123.123.123]",
+      "\"email..email\"@domain.com",
+      "nathan@学生优惠.com"
+    ],
+    "invalid": [
+      "plainaddress",
+      "email.domain.com",
+      "@domain.com",
+      "email@domain@domain.com",
+      "email..email@domain.com"
+    ],
+    "edge": [
+      ".email@domain.com",
+      "email.@domain.com",
+      "email@.domain.com",
+      "email@-domain.com"
+    ]
+  },
+  "bugmagnetUrls": {
+    "valid": [
+      "www.mysite.com",
+      "mysite.com",
+      "http://www.mysite.com",
+      "https://www.mysite.com",
+      "ftp://mysite.com",
+      "https://www.xn--80ak6aa92e.com/"
+    ],
+    "invalid": [
+      "http//www.mysite.com",
+      "http:/www.mysite.com",
+      "://www.mysite.com",
+      "foo://www.mysite.com",
+      "http://:",
+      "mysite"
+    ],
+    "edge": [
+      "https://example.com/space path",
+      "https://例え.テスト"
+    ]
+  },
+  "bugmagnetNumbers": {
+    "valid": [
+      "0",
+      "32767",
+      "32768",
+      "65535",
+      "2147483647",
+      "4294967295",
+      "1E-16",
+      "-1",
+      "0.0001"
+    ],
+    "invalid": [
+      "NaN",
+      "Infinity",
+      "1,234,567",
+      "1.234.567,89",
+      "--1"
+    ],
+    "edge": [
+      "2147483648",
+      "4294967296",
+      "-0",
+      "0000"
+    ]
+  },
+  "bugmagnetAmounts": {
+    "valid": [
+      "5000",
+      "$5,000",
+      "$5 000",
+      "$5,000.00"
+    ],
+    "invalid": [
+      "",
+      "$-",
+      "USD",
+      "5,,000"
+    ],
+    "edge": [
+      "$0",
+      "-$1",
+      "0.00"
+    ]
+  },
+  "bugmagnetCurrencies": {
+    "valid": [
+      "JPY",
+      "KWD"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "$$$"
+    ],
+    "edge": [
+      "USD",
+      "EUR"
+    ]
+  },
+  "bugmagnetWhitespace": {
+    "valid": [
+      "Contains\tTabs\nAnd\tNewlines",
+      "  leading spaces",
+      "\t leading tabs and spaces",
+      " Space on both sides ",
+      "\t \t\n \n "
+    ],
+    "invalid": [
+      "",
+      " ",
+      "\n",
+      "\t"
+    ],
+    "edge": [
+      "\u00a0non-breaking",
+      "zero\u200bwidth"
+    ]
+  },
+  "bugmagnetFormatExploits": {
+    "valid": [
+      "Robert'); DROP TABLE Students;--",
+      "Nice site,  I think I'll take it. <script>alert('Executing JS')</script>",
+      "'-prompt()-'",
+      "\"-prompt()-\"",
+      "<blink>Hello there</blink>",
+      "<i><b>Bold</i></b>"
+    ],
+    "invalid": [
+      "<script>",
+      "</div>",
+      "\" onmouseover=alert(1) x=\""
+    ],
+    "edge": [
+      "</textarea><script>alert(1)</script>",
+      "<svg/onload=alert(1)>"
+    ]
+  },
+  "bugmagnetUnicode": {
+    "valid": [
+      "1234\u202E1234",
+      "אבגד\u202Dאבגד",
+      "אבגד",
+      "\u202ekcuf\u202D you",
+      "https://аррӏе.com",
+      "https://аpple.com"
+    ],
+    "invalid": [
+      "\u0341",
+      "\u059F",
+      "\uFF1A\u02D0\u02F8\u0589",
+      "\uFF1B\u037E\uFE14",
+      "\u00DF"
+    ],
+    "edge": [
+      "two\u200Dwords",
+      "two\u200Cwords",
+      "\u2190\u20DD",
+      "N\u036BO\u036C"
+    ]
+  },
+  "bugmagnetPaymentCards": {
+    "valid": [
+      "Authorize.net Amex: 370000000000002",
+      "Authorize.net Discover: 6011000000000012",
+      "Authorize.net JCB: 3088000000000017",
+      "Authorize.net Diners: 38000000000006",
+      "Authorize.net Visa: 4007000000027",
+      "Authorize.net MasterCard: 5424000000000015",
+      "Braintree Amex: 378282246310005",
+      "Braintree Discover: 6011111111111117",
+      "Braintree MasterCard: 5555555555554444",
+      "Braintree Visa: 4111111111111111",
+      "Cybersource Visa: 4111111111111111",
+      "Cybersource MasterCard: 5555555555554444",
+      "Cybersource Amex: 378282246310005",
+      "Cybersource Discover: 6011111111111117",
+      "Payflow Pro Amex: 378282246310005",
+      "Payflow Pro Diners Club: 30569309025904",
+      "Payflow Pro Discover: 6011111111111117",
+      "Payflow Pro Visa: 4111111111111111",
+      "Paypal Visa: 4111111111111111",
+      "Paypal Discover: 6011000990139424",
+      "Paypal MasterCard: 5555555555554444",
+      "Spreedly Visa: 4111111111111111",
+      "Stripe Visa: 4242424242424242",
+      "Stripe MasterCard: 5555555555554444",
+      "Stripe Amex: 378282246310005",
+      "Vantiv Visa: 4457010140000141",
+      "Vantiv MasterCard: 5112000100000003"
+    ],
+    "invalid": [
+      "Braintree Invalid Visa: 4000111111111115",
+      "Braintree Invalid MasterCard: 5105105105105100",
+      "Braintree Invalid Amex: 378734493671000",
+      "Braintree Invalid JCB: 3566002020360505",
+      "Stripe Card declined: 4000000000000002",
+      "Stripe Fraud: 4100000000000019",
+      "Stripe Incorrect CVC: 4000000000000127",
+      "Stripe Expired Card: 4000000000000069",
+      "Stripe Processing Error: 4000000000000119",
+      "Spreedly Declined Visa: 4012888888881881",
+      "Spreedly Declined MasterCard: 5105105105105100",
+      "Spreedly Declined Amex: 371449635398431"
+    ],
+    "edge": [
+      "Authorize.net Zip Declined: 46282",
+      "Authorize.net AVS Invalid: 46203",
+      "Authorize.net AVS Unavailable: 46207",
+      "Authorize.net Non US Bank: 46204",
+      "Authorize.net CVV Success: 900",
+      "Authorize.net CVV Does Not Match: 901",
+      "Paypal Visa (short): 4222222222222",
+      "Paypal Switch/Solo: 6331101999990016",
+      "Stripe CVC check fail: 4000000000000101",
+      "Stripe Card still added: 4000000000000341",
+      "Spreedly address_line1_check fail: 4000000000000028",
+      "Spreedly address_zip_check fail: 4000000000000036"
+    ]
+  },
+  "bugmagnetTextSize": {
+    "valid": [
+      { "_type": "size", "size": "128", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "129", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "256", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "257", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "32767", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "32768", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "32769", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "65535", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "65536", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+      { "_type": "size", "size": "65537", "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." }
+    ],
+    "invalid": [
+      { "_type": "size", "size": "0", "template": "Lorem ipsum" },
+      { "_type": "size", "size": "-1", "template": "Lorem ipsum" }
+    ],
+    "edge": [
+      { "_type": "size", "size": "128", "template": "0123456789" },
+      { "_type": "size", "size": "129", "template": "0123456789" },
+      { "_type": "size", "size": "256", "template": "0123456789" },
+      { "_type": "size", "size": "257", "template": "0123456789" },
+      { "_type": "size", "size": "32767", "template": "0123456789" },
+      { "_type": "size", "size": "32768", "template": "0123456789" },
+      { "_type": "size", "size": "32769", "template": "0123456789" },
+      { "_type": "size", "size": "65535", "template": "0123456789" },
+      { "_type": "size", "size": "65536", "template": "0123456789" },
+      { "_type": "size", "size": "65537", "template": "0123456789" }
+    ]
+  },
+  "ip": {
+    "valid": [
+      "127.0.0.1",
+      "192.168.0.1",
+      "10.0.0.1",
+      "2001:db8::1",
+      "fe80::1"
+    ],
+    "invalid": [
+      "999.999.999.999",
+      "256.256.256.256",
+      "1234::12345",
+      "127.0.0",
+      "::g"
+    ],
+    "edge": [
+      "0.0.0.0",
+      "255.255.255.255",
+      "::1",
+      "2001:0db8:0000:0000:0000:0000:0000:0000",
+      "::ffff:192.0.2.128"
+    ]
+  },
+  "uuid": {
+    "valid": [
+      "550e8400-e29b-41d4-a716-446655440000",
+      "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "00000000-0000-0000-0000-000000000000",
+      "123e4567-e89b-12d3-a456-426614174000",
+      "9b2c9b62-58fb-4c66-8c0c-2fdb1d1e9d55"
+    ],
+    "invalid": [
+      "550e8400e29b41d4a716446655440000",
+      "g47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "123",
+      "-e29b-41d4-a716-446655440000",
+      "00000000-0000-0000-0000-00000000000Z"
+    ],
+    "edge": [
+      "ffffffff-ffff-ffff-ffff-ffffffffffff",
+      "00000000-0000-4000-8000-000000000000",
+      "123e4567-e89b-42d3-a456-426614174000",
+      "123e4567-e89b-12d3-a456-426614174000 ",
+      " 123e4567-e89b-12d3-a456-426614174000"
+    ]
+  },
+  "boolean": {
+    "valid": [
+      "true",
+      "false",
+      "1",
+      "0",
+      "yes"
+    ],
+    "invalid": [
+      "truthy",
+      "f",
+      "True",
+      "FALSE",
+      "null"
+    ],
+    "edge": [
+      "on",
+      "off",
+      "t",
+      "f",
+      ""
+    ]
+  },
+  "time": {
+    "valid": [
+      "00:00",
+      "23:59",
+      "12:34",
+      "09:30:45",
+      "18:05"
+    ],
+    "invalid": [
+      "24:00",
+      "99:99",
+      "-1:00",
+      "12:60",
+      "::"
+    ],
+    "edge": [
+      "00:00:00",
+      "23:59:59",
+      "7:5",
+      "12:34:56.789",
+      "12:34 PM"
+    ]
+  },
+  "datetime": {
+    "valid": [
+      "2024-01-01T00:00:00Z",
+      "2025-12-31T23:59:59Z",
+      "2024-06-15T08:30:00+02:00",
+      "2024-02-29T12:00:00Z",
+      "1999-12-31T23:59:59-05:00"
+    ],
+    "invalid": [
+      "2024-13-01T00:00:00Z",
+      "2024-02-30T00:00:00Z",
+      "2024-01-01T24:01:00Z",
+      "2024-01-01T00:00:00+99:00",
+      "2024-01-01"
+    ],
+    "edge": [
+      "0001-01-01T00:00:00Z",
+      "9999-12-31T23:59:59Z",
+      "2024-01-01T00:00:00.000Z",
+      "2024-01-01T00:00:00+00:00",
+      "2024-01-01T00:00:00-00:00"
+    ]
+  },
+  "hex": {
+    "valid": [
+      "0xFF",
+      "0x1a2b",
+      "deadbeef",
+      "ABCDEF",
+      "00ff00"
+    ],
+    "invalid": [
+      "0xG1",
+      "0x",
+      "ZZZ",
+      "-0x1",
+      "0x1.1"
+    ],
+    "edge": [
+      "ffffffffffffffff",
+      "00000000",
+      "0XABC",
+      "\n0x1",
+      "0x00"
+    ]
+  },
+  "base64": {
+    "valid": [
+      "SGVsbG8gd29ybGQ=",
+      "eyJrZXkiOiAidmFsdWUifQ==",
+      "AAECAwQFBgcICQ==",
+      "U29tZSB0ZXh0Lg==",
+      "TWFu"
+    ],
+    "invalid": [
+      "SGVsbG8gd29ybGQ",
+      "SGVsbG8= =",
+      "****",
+      "SGVsbG8$",
+      "SGVsbG8gd29ybGQ===="
+    ],
+    "edge": [
+      "",
+      "Zg==",
+      "Zm8=",
+      "Zm9v",
+      "Zm9vYg=="
+    ]
+  },
+  "htmlEntities": {
+    "valid": [
+      "&amp;",
+      "&lt;script&gt;",
+      "&quot;quoted&quot;",
+      "&#39;single&#39;",
+      "&nbsp;"
+    ],
+    "invalid": [
+      "&am;",
+      "&lt",
+      "&#xZZ;",
+      "&unknown;",
+      "&;"
+    ],
+    "edge": [
+      "&#x3C;script&#x3E;",
+      "&#00060;",
+      "&quot;&quot;",
+      "&apos;",
+      "&copy;"
+    ]
+  },
+  "path": {
+    "valid": [
+      "/home/user/file.txt",
+      "C:\\Users\\Public\\file.txt",
+      "./relative/path",
+      "../up/one",
+      "/var/log/app.log"
+    ],
+    "invalid": [
+      "",
+      "::",
+      "|bad|path|",
+      "\\\\\\",
+      "../../../../../../"
+    ],
+    "edge": [
+      "/tmp/..",
+      "C:\\CON",
+      "C:\\AUX",
+      "/dev/null",
+      "~/user/.ssh/id_rsa"
+    ]
+  },
+  "security": {
+    "xss": [
+      "<script>alert('XSS')</script>",
+      "<img src=x onerror=alert('XSS')>",
+      "\";alert('XSS');//",
+      "<svg onload=alert('XSS')>",
+      "<iframe src=javascript:alert('XSS')>",
+      "<body onload=alert('XSS')>"
+    ],
+    "sqli": [
+      "' OR '1'='1",
+      "' OR 1=1 --",
+      "admin'--",
+      "1' or '1'='1'--",
+      "' UNION SELECT NULL --"
+    ],
+    "pathTraversal": [
+      "../../../etc/passwd",
+      "..\\..\\..\\windows\\system32\\drivers\\etc\\hosts",
+      "%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd",
+      "..%2f..%2f..%2f..%2fetc%2fpasswd"
+    ]
+  }
+}

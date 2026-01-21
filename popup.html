@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QA Testing Assistant</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <div class="brand">QA Testing Assistant</div>
+        <div class="subtitle">Fast selectors, datasets, and test ideas in one panel.</div>
+      </div>
+
+      <div class="section">
+        <button id="pickSelector">Pick CSS selector</button>
+        <div class="row">
+          <div class="label">Last selector</div>
+          <div id="lastSelector" class="mono">-</div>
+        </div>
+        <div class="row">
+          <div class="label">Last snippet</div>
+          <div id="lastSnippet" class="mono">-</div>
+        </div>
+        <div class="row">
+          <div class="label">Snippet type</div>
+          <select id="snippetType">
+            <option value="css">CSS selector</option>
+            <option value="playwright">Playwright (CSS)</option>
+            <option value="playwright-role">Playwright (getByRole)</option>
+            <option value="playwright-label">Playwright (getByLabel)</option>
+            <option value="playwright-testid">Playwright (getByTestId)</option>
+            <option value="xpath">XPath</option>
+            <option value="cypress">Cypress (CSS)</option>
+          </select>
+        </div>
+        <div class="row">
+          <button id="copySnippet" class="wide">Copy snippet</button>
+          <button id="toggleLivePreview" class="muted">Live preview: Off</button>
+        </div>
+        <button id="previewSelector" class="ghost">Preview all strategies</button>
+        <div id="selectorPreview" class="list"></div>
+      </div>
+
+      <div class="section">
+        <div class="row">
+          <div class="label">Test data</div>
+          <select id="dataKind">
+            <option value="email">Email</option>
+            <option value="emailUnicode">Email (Unicode)</option>
+            <option value="name">Name</option>
+            <option value="phone">Phone</option>
+            <option value="phoneIntl">Phone (Intl)</option>
+            <option value="creditCard">Credit card</option>
+            <option value="cardByBrand">Card (by brand)</option>
+            <option value="address">Address</option>
+            <option value="addressLocale">Address (Locale)</option>
+            <option value="postalCode">Postal code</option>
+            <option value="country">Country</option>
+            <option value="username">Username</option>
+            <option value="password">Password</option>
+            <option value="number">Number</option>
+            <option value="decimal">Decimal</option>
+            <option value="boundary">Boundary</option>
+            <option value="date">Date</option>
+            <option value="time">Time</option>
+            <option value="datetime">DateTime</option>
+            <option value="url">URL</option>
+            <option value="urlSchemes">URL Schemes</option>
+            <option value="currency">Currency</option>
+            <option value="currencyLocale">Currency (Locale)</option>
+            <option value="iban">IBAN</option>
+            <option value="bic">BIC</option>
+            <option value="directDebit">Direct Debit</option>
+            <option value="nationalId">National ID</option>
+            <option value="vat">VAT</option>
+            <option value="language">Language</option>
+            <option value="foreignLanguage">Foreign language</option>
+            <option value="lorem">Lorem ipsum</option>
+            <option value="unicode">Unicode</option>
+            <option value="whitespace">Whitespace</option>
+            <option value="controlChars">Control chars</option>
+            <option value="symbols">Symbols</option>
+            <option value="symbolsExtended">Symbols (Extended)</option>
+            <option value="emoji">Emoji</option>
+            <option value="largeText">Large text</option>
+            <option value="json">JSON</option>
+            <option value="regex">Regex</option>
+            <option value="html">HTML</option>
+            <option value="htmlEntities">HTML entities</option>
+            <option value="bugmagnetLorems">BugMagnet Lorems</option>
+            <option value="bugmagnetNames">BugMagnet Names</option>
+            <option value="bugmagnetPostCodes">BugMagnet Post Codes</option>
+            <option value="bugmagnetCities">BugMagnet Cities</option>
+            <option value="bugmagnetEmails">BugMagnet Emails</option>
+            <option value="bugmagnetUrls">BugMagnet URLs</option>
+            <option value="bugmagnetNumbers">BugMagnet Numbers</option>
+            <option value="bugmagnetAmounts">BugMagnet Amounts</option>
+            <option value="bugmagnetCurrencies">BugMagnet Currencies</option>
+            <option value="bugmagnetWhitespace">BugMagnet Whitespace</option>
+            <option value="bugmagnetFormatExploits">BugMagnet Format Exploits</option>
+            <option value="bugmagnetUnicode">BugMagnet Unicode</option>
+            <option value="bugmagnetPaymentCards">BugMagnet Payment Cards</option>
+            <option value="bugmagnetTextSize">BugMagnet Text Size</option>
+            <option value="bugmagnetStripeBoundary">BugMagnet Stripe Boundary</option>
+            <option value="bugmagnetSpreedlyBoundary">BugMagnet Spreedly Boundary</option>
+            <option value="bugmagnetAuthorizeNetZip">BugMagnet Authorize.Net Zip</option>
+            <option value="bugmagnetAuthorizeNetCvv">BugMagnet Authorize.Net CVV</option>
+            <option value="bugmagnetVantivCvv">BugMagnet Vantiv CVV</option>
+            <option value="bugmagnetPaypalCards">BugMagnet PayPal Cards</option>
+            <option value="file">File</option>
+            <option value="path">Path</option>
+            <option value="ip">IP</option>
+            <option value="uuid">UUID</option>
+            <option value="hex">Hex</option>
+            <option value="base64">Base64</option>
+            <option value="boolean">Boolean</option>
+            <option value="sql">SQL</option>
+            <option value="xss">XSS</option>
+          </select>
+          <select id="dataVariant">
+            <option value="valid">Valid</option>
+            <option value="invalid">Invalid</option>
+            <option value="edge">Edge</option>
+            <option value="random">Random</option>
+          </select>
+          <input id="dataIndex" class="mini" placeholder="#" />
+        </div>
+        <button id="insertData">Insert into focused input</button>
+        <button id="bulkInsert" class="muted">Bulk fill form (uses variant)</button>
+        <div id="bulkInsertStatus" class="list"></div>
+      </div>
+
+      <div class="section">
+        <button id="scanPage">Scan page -> test cases</button>
+        <div class="row">
+          <div class="label">Last scan</div>
+        </div>
+        <div id="lastScan" class="list"></div>
+      </div>
+
+      <div class="section">
+        <div class="label">Export</div>
+        <div class="row">
+          <button id="exportMarkdown" class="inline-button">Markdown</button>
+          <button id="exportGherkin" class="inline-button">Gherkin</button>
+          <button id="exportJson" class="inline-button">JSON</button>
+          <button id="exportCsv" class="inline-button">CSV</button>
+          <button id="exportJira" class="inline-button">Jira</button>
+          <button id="exportPlaywright" class="inline-button">Playwright</button>
+          <button id="exportCypress" class="inline-button">Cypress</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="row">
+          <div class="label">Security</div>
+          <button id="scanSecurity" class="muted">Scan headers</button>
+        </div>
+        <div id="securityResults" class="list"></div>
+        <div id="securityChecklist" class="list"></div>
+        <div class="label">OWASP quick check</div>
+        <div id="owaspChecklist" class="list"></div>
+      </div>
+
+      <div class="section">
+        <div class="label">Panel tweaks</div>
+        <div class="row">
+          <label class="toggle">
+            <input type="checkbox" id="autoLivePreview" />
+            <span>Auto live preview</span>
+          </label>
+        </div>
+        <div class="row">
+          <label class="toggle">
+            <input type="checkbox" id="showSelectorPreview" />
+            <span>Show selector preview</span>
+          </label>
+        </div>
+        <div class="row">
+          <div class="label">Default export</div>
+          <select id="defaultExport">
+            <option value="markdown">Markdown</option>
+            <option value="gherkin">Gherkin</option>
+            <option value="json">JSON</option>
+            <option value="csv">CSV</option>
+            <option value="jira">Jira</option>
+            <option value="playwright">Playwright</option>
+            <option value="cypress">Cypress</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="footer">Context menu also available (right click).</div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

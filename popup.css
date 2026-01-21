@@ -1,0 +1,146 @@
+body {
+  margin: 0;
+  font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  width: 390px;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.wrap {
+  padding: 14px;
+}
+
+.hero {
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1e293b, #0f172a 60%);
+  margin-bottom: 12px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.35);
+}
+
+.brand {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+.section {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: rgba(15, 23, 42, 0.7);
+}
+
+button {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #f8fafc;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.muted {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px dashed rgba(148, 163, 184, 0.4);
+  color: #cbd5f5;
+}
+
+button.wide {
+  width: 100%;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-size: 12px;
+  color: #94a3b8;
+  width: 90px;
+}
+
+select {
+  flex: 1;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.mini {
+  width: 46px;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.inline-button {
+  width: auto;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  background: #1e293b;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.list {
+  margin-top: 6px;
+  display: grid;
+  gap: 6px;
+}
+
+.item {
+  padding: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 8px;
+  font-size: 12px;
+  color: #e2e8f0;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
+.toggle input {
+  accent-color: #38bdf8;
+}
+
+.footer {
+  font-size: 11px;
+  color: #94a3b8;
+}

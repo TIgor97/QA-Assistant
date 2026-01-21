@@ -1,0 +1,413 @@
+async function getActiveTabId() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  return tab?.id;
+}
+
+function buildOwaspChecklist(result) {
+  const headers = result?.headers || {};
+  return [
+    { name: "A01 Broken Access Control", status: "review", severity: "high" },
+    { name: "A02 Cryptographic Failures", status: headers["strict-transport-security"] ? "ok" : "warn", severity: "high" },
+    { name: "A03 Injection", status: "review", severity: "high" },
+    { name: "A05 Security Misconfiguration", status: headers["content-security-policy"] ? "ok" : "warn", severity: "high" },
+    { name: "A06 Vulnerable Components", status: "review", severity: "medium" },
+    { name: "A07 Auth Failures", status: "review", severity: "high" },
+    { name: "A08 Data Integrity", status: "review", severity: "medium" },
+    { name: "A09 Logging & Monitoring", status: "review", severity: "medium" },
+    { name: "A10 SSRF", status: "review", severity: "medium" }
+  ];
+}
+
+function toMarkdown(cases) {
+  return cases
+    .map((item, index) => {
+      const steps = Array.isArray(item.steps) ? item.steps.map((s) => `- ${s}`).join("\n") : "";
+      return `### ${index + 1}. ${item.title || "Test case"}\n` +
+        `**Target:** ${item.target || "-"}\n\n` +
+        `**Steps:**\n${steps || "-"}\n\n` +
+        `**Expected:** ${item.expected || "-"}`;
+    })
+    .join("\n\n");
+}
+
+function toCsv(cases) {
+  const rows = ["title,target,steps,expected"];
+  cases.forEach((item) => {
+    const title = JSON.stringify(item.title || "Test case");
+    const target = JSON.stringify(item.target || "");
+    const steps = JSON.stringify(Array.isArray(item.steps) ? item.steps.join(" | ") : "");
+    const expected = JSON.stringify(item.expected || "");
+    rows.push([title, target, steps, expected].join(","));
+  });
+  return rows.join("\n");
+}
+
+function toJira(cases) {
+  return cases
+    .map((item) => {
+      const steps = Array.isArray(item.steps) ? item.steps.map((s) => `* ${s}`).join("\n") : "";
+      return `h3. ${item.title || "Test case"}\n*Target:* ${item.target || "-"}\n*Steps:*\n${steps || "-"}\n*Expected:* ${item.expected || "-"}`;
+    })
+    .join("\n\n");
+}
+
+function toGherkin(cases) {
+  return cases
+    .map((item, index) => {
+      const steps = Array.isArray(item.steps) ? item.steps : [];
+      const [first, ...rest] = steps;
+      const whenThen = rest.map((s) => `  And ${s}`).join("\n");
+      const expected = item.expected ? `\n  Then ${item.expected}` : "";
+      return `Scenario: ${index + 1} - ${item.title || "Test case"}\n` +
+        `  Given ${item.target || "the element"}\n` +
+        `  When ${first || "the user interacts"}\n` +
+        `${whenThen}${expected}`;
+    })
+    .join("\n\n");
+}
+
+async function copyExport(format) {
+  const { lastScan } = await chrome.storage.session.get(["lastScan"]);
+  const items = Array.isArray(lastScan) ? lastScan : [];
+  if (!items.length) return;
+  let output = "";
+  if (format === "markdown") output = toMarkdown(items);
+  if (format === "gherkin") output = toGherkin(items);
+  if (format === "json") output = JSON.stringify(items, null, 2);
+  if (format === "csv") output = toCsv(items);
+  if (format === "jira") output = toJira(items);
+  if (format === "playwright") output = toScript(items, "playwright");
+  if (format === "cypress") output = toScript(items, "cypress");
+  if (output) await navigator.clipboard.writeText(output);
+}
+
+function renderPreview(previewItems, container) {
+  container.innerHTML = "";
+  previewItems.forEach((item) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = `${item.target}: ${item.code || "-"}`;
+    container.appendChild(div);
+  });
+}
+
+function buildSecurityChecklist(result) {
+  const headers = result?.headers || {};
+  return [
+    { name: "CSP", key: "content-security-policy", severity: "high" },
+    { name: "HSTS", key: "strict-transport-security", severity: "high" },
+    { name: "X-Frame-Options", key: "x-frame-options", severity: "medium" },
+    { name: "X-Content-Type-Options", key: "x-content-type-options", severity: "medium" },
+    { name: "Referrer-Policy", key: "referrer-policy", severity: "low" },
+    { name: "Permissions-Policy", key: "permissions-policy", severity: "low" }
+  ].map((item) => ({
+    ...item,
+    present: Boolean(headers[item.key])
+  }));
+}
+
+function renderChecklist(items, container) {
+  container.innerHTML = "";
+  items.forEach((item) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    if (typeof item.present === "boolean") {
+      div.textContent = `${item.name}: ${item.present ? "present" : "missing"} (${item.severity})`;
+    } else {
+      div.textContent = `${item.name}: ${item.status} (${item.severity})`;
+    }
+    container.appendChild(div);
+  });
+}
+
+function toScript(cases, target) {
+  const normalizeAction = (step) => {
+    const text = (step || "").toLowerCase();
+    if (text.includes("submit")) return "submit";
+    if (text.includes("type") || text.includes("enter")) return "fill";
+    if (text.includes("select")) return "select";
+    if (text.includes("check")) return "check";
+    if (text.includes("toggle")) return "click";
+    return "click";
+  };
+
+  const buildLine = (selector, step, framework) => {
+    if (!selector) return `  // ${step || "step"}`;
+    const action = normalizeAction(step);
+    if (framework === "playwright") {
+      if (action === "fill") return `  await page.locator('${selector}').fill(''); // ${step || "fill"}`;
+      if (action === "check") return `  await page.locator('${selector}').check(); // ${step || "check"}`;
+      if (action === "select") return `  await page.locator('${selector}').selectOption(''); // ${step || "select"}`;
+      if (action === "submit") return `  await page.locator('${selector}').press('Enter'); // ${step || "submit"}`;
+      return `  await page.locator('${selector}').click(); // ${step || "click"}`;
+    }
+    if (framework === "cypress") {
+      if (action === "fill") return `    cy.get('${selector}').type(''); // ${step || "type"}`;
+      if (action === "check") return `    cy.get('${selector}').check(); // ${step || "check"}`;
+      if (action === "select") return `    cy.get('${selector}').select(''); // ${step || "select"}`;
+      if (action === "submit") return `    cy.get('${selector}').type('{enter}'); // ${step || "submit"}`;
+      return `    cy.get('${selector}').click(); // ${step || "click"}`;
+    }
+    return "";
+  };
+
+  if (target === "playwright") {
+    return [
+      "import { test, expect } from '@playwright/test';",
+      "",
+      "test('qa generated cases', async ({ page }) => {",
+      ...cases.flatMap((item) => {
+        const selector = item.target || "";
+        const steps = Array.isArray(item.steps) ? item.steps : [];
+        if (!steps.length) return [`  // ${item.title || "Test case"}`];
+        return steps.map((step) => buildLine(selector, step, "playwright"));
+      }),
+      "});"
+    ].join("\n");
+  }
+
+  if (target === "cypress") {
+    return [
+      "describe('qa generated cases', () => {",
+      "  it('runs generated steps', () => {",
+      ...cases.flatMap((item) => {
+        const selector = item.target || "";
+        const steps = Array.isArray(item.steps) ? item.steps : [];
+        if (!steps.length) return [`    // ${item.title || "Test case"}`];
+        return steps.map((step) => buildLine(selector, step, "cypress"));
+      }),
+      "  });",
+      "});"
+    ].join("\n");
+  }
+  return "";
+}
+
+function renderSecurity(result, container) {
+  container.innerHTML = "";
+  if (!result) return;
+  const headerEntries = Object.entries(result.headers || {});
+  headerEntries.forEach(([key, value]) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = `${key}: ${value || "missing"}`;
+    container.appendChild(div);
+  });
+  (result.cookies || []).forEach((cookie) => {
+    const flags = [];
+    if (cookie.flags?.secure) flags.push("Secure");
+    if (cookie.flags?.httpOnly) flags.push("HttpOnly");
+    if (cookie.flags?.sameSite) flags.push(cookie.flags.sameSite);
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = `Cookie ${cookie.name}: ${flags.join(", ") || "no flags"}`;
+    container.appendChild(div);
+  });
+}
+
+async function refreshSessionState() {
+  const { lastSelector, lastScan, lastSnippet, lastSecurity, lastLivePreview } = await chrome.storage.session.get([
+    "lastSelector",
+    "lastScan",
+    "lastSnippet",
+    "lastSecurity",
+    "lastLivePreview"
+  ]);
+
+  const { autoLivePreview, showSelectorPreview, defaultExport } = await chrome.storage.local.get([
+    "autoLivePreview",
+    "showSelectorPreview",
+    "defaultExport"
+  ]);
+
+  const sel = document.getElementById("lastSelector");
+  sel.textContent = lastSelector || "-";
+
+  const snippet = document.getElementById("lastSnippet");
+  snippet.textContent = lastSnippet || "-";
+
+  const list = document.getElementById("lastScan");
+  list.innerHTML = "";
+  const items = Array.isArray(lastScan) ? lastScan : [];
+  for (const t of items) {
+    const div = document.createElement("div");
+    div.className = "item";
+    if (typeof t === "string") {
+      div.textContent = t;
+    } else {
+      const title = t?.title || "Test case";
+      const steps = Array.isArray(t?.steps) ? t.steps.join(" → ") : "";
+      const expected = t?.expected ? `Expected: ${t.expected}` : "";
+      div.textContent = [title, steps, expected].filter(Boolean).join(" | ");
+    }
+    list.appendChild(div);
+  }
+
+  const previewBox = document.getElementById("selectorPreview");
+  if (showSelectorPreview !== false && lastLivePreview?.preview) {
+    renderPreview(lastLivePreview.preview, previewBox);
+  } else {
+    previewBox.innerHTML = "";
+  }
+
+  const securityResults = document.getElementById("securityResults");
+  const securityChecklist = document.getElementById("securityChecklist");
+  const owaspChecklist = document.getElementById("owaspChecklist");
+  renderSecurity(lastSecurity, securityResults);
+  renderChecklist(buildSecurityChecklist(lastSecurity), securityChecklist);
+  renderChecklist(buildOwaspChecklist(lastSecurity), owaspChecklist);
+
+  const liveToggle = document.getElementById("toggleLivePreview");
+  liveToggle.dataset.state = autoLivePreview ? "on" : "off";
+  liveToggle.textContent = autoLivePreview ? "Live preview: On" : "Live preview: Off";
+
+  const autoLiveEl = document.getElementById("autoLivePreview");
+  const showPreviewEl = document.getElementById("showSelectorPreview");
+  const exportSelect = document.getElementById("defaultExport");
+  autoLiveEl.checked = Boolean(autoLivePreview);
+  showPreviewEl.checked = showSelectorPreview !== false;
+  if (defaultExport) exportSelect.value = defaultExport;
+}
+
+document.getElementById("pickSelector").addEventListener("click", async () => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+  await chrome.tabs.sendMessage(tabId, { type: "QA_START_PICK_SELECTOR" });
+  window.close();
+});
+
+document.getElementById("insertData").addEventListener("click", async () => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+
+  const kind = document.getElementById("dataKind").value;
+  const variant = document.getElementById("dataVariant").value;
+  const indexValue = document.getElementById("dataIndex").value.trim();
+  const index = variant === "random" ? "random" : indexValue || "0";
+
+  await chrome.tabs.sendMessage(tabId, { type: "QA_INSERT_TEST_DATA", kind, variant, index });
+  window.close();
+});
+
+document.getElementById("bulkInsert").addEventListener("click", async () => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+  const variant = document.getElementById("dataVariant").value;
+  const res = await chrome.tabs.sendMessage(tabId, { type: "QA_BULK_INSERT", variant });
+  const status = document.getElementById("bulkInsertStatus");
+  status.innerHTML = "";
+  if (!res?.result) return;
+  const div = document.createElement("div");
+  div.className = "item";
+  div.textContent = `Filled ${res.result.filled} of ${res.result.total} fields (skipped ${res.result.skipped}).`;
+  status.appendChild(div);
+  if (Array.isArray(res.result.testCases)) {
+    await chrome.storage.session.set({ lastScan: res.result.testCases });
+    await refreshSessionState();
+  }
+});
+
+document.getElementById("scanPage").addEventListener("click", async () => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+
+  const res = await chrome.tabs.sendMessage(tabId, { type: "QA_SCAN_PAGE" });
+  await chrome.storage.session.set({ lastScan: res?.testCases || [] });
+  await refreshSessionState();
+});
+
+document.getElementById("previewSelector").addEventListener("click", async () => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+  const res = await chrome.tabs.sendMessage(tabId, { type: "QA_SELECTOR_PREVIEW" });
+  const previewBox = document.getElementById("selectorPreview");
+  renderPreview(res?.preview || [], previewBox);
+});
+
+document.getElementById("scanSecurity").addEventListener("click", async () => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const res = await chrome.runtime.sendMessage({ type: "QA_SECURITY_SCAN", url: tab?.url });
+  if (res?.result) {
+    const results = document.getElementById("securityResults");
+    const checklist = document.getElementById("securityChecklist");
+    const owaspChecklist = document.getElementById("owaspChecklist");
+    renderSecurity(res.result, results);
+    renderChecklist(buildSecurityChecklist(res.result), checklist);
+    renderChecklist(buildOwaspChecklist(res.result), owaspChecklist);
+  }
+});
+
+document.getElementById("toggleLivePreview").addEventListener("click", async () => {
+  const button = document.getElementById("toggleLivePreview");
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+  const isOn = button.dataset.state === "on";
+  if (isOn) {
+    await chrome.tabs.sendMessage(tabId, { type: "QA_STOP_LIVE_PREVIEW" });
+    button.dataset.state = "off";
+    button.textContent = "Live preview: Off";
+    await chrome.storage.local.set({ autoLivePreview: false });
+  } else {
+    await chrome.tabs.sendMessage(tabId, { type: "QA_START_LIVE_PREVIEW" });
+    button.dataset.state = "on";
+    button.textContent = "Live preview: On";
+    await chrome.storage.local.set({ autoLivePreview: true });
+  }
+});
+
+document.getElementById("copySnippet").addEventListener("click", async () => {
+  const tabId = await getActiveTabId();
+  if (!tabId) return;
+  const target = document.getElementById("snippetType").value;
+  await chrome.tabs.sendMessage(tabId, { type: "QA_COPY_SNIPPET", target });
+  window.close();
+});
+
+document.getElementById("exportMarkdown").addEventListener("click", async () => {
+  await copyExport("markdown");
+});
+
+document.getElementById("exportGherkin").addEventListener("click", async () => {
+  await copyExport("gherkin");
+});
+
+document.getElementById("exportJson").addEventListener("click", async () => {
+  await copyExport("json");
+});
+
+document.getElementById("exportPlaywright").addEventListener("click", async () => {
+  await copyExport("playwright");
+});
+
+document.getElementById("exportCypress").addEventListener("click", async () => {
+  await copyExport("cypress");
+});
+
+document.getElementById("exportCsv").addEventListener("click", async () => {
+  await copyExport("csv");
+});
+
+document.getElementById("exportJira").addEventListener("click", async () => {
+  await copyExport("jira");
+});
+
+document.getElementById("autoLivePreview").addEventListener("change", async (e) => {
+  await chrome.storage.local.set({ autoLivePreview: e.target.checked });
+});
+
+document.getElementById("showSelectorPreview").addEventListener("change", async (e) => {
+  await chrome.storage.local.set({ showSelectorPreview: e.target.checked });
+  await refreshSessionState();
+});
+
+document.getElementById("defaultExport").addEventListener("change", async (e) => {
+  await chrome.storage.local.set({ defaultExport: e.target.value });
+});
+
+chrome.storage.session.onChanged.addListener(() => {
+  refreshSessionState();
+});
+
+refreshSessionState();
