@@ -129,22 +129,17 @@ function showTypoNotification(message, color) {
   setTimeout(() => msg.remove(), 5000);
 }
 
-async function loadTypoDictionary() {
-  if (window.__qaTypoDictionary) return window.__qaTypoDictionary;
-  const response = await chrome.runtime.sendMessage({ type: "QA_GET_TYPO_ASSETS" });
-  if (!response?.ok || !response.assets) {
-    throw new Error(response?.error || "Typo assets unavailable");
-  }
-
-  if (!window.Typo) {
-    const script = document.createElement("script");
-    script.textContent = response.assets.source;
-    document.documentElement.appendChild(script);
-    script.remove();
-  }
-
-  window.__qaTypoDictionary = new window.Typo("en_US", response.assets.aff, response.assets.dic);
-  return window.__qaTypoDictionary;
+async function loadTypoWordSet() {
+  if (window.__qaTypoWordSet) return window.__qaTypoWordSet;
+  const dicText = await fetch(chrome.runtime.getURL("assets/typo/en_US.dic")).then((res) => res.text());
+  const lines = dicText.split(/\r?\n/).filter(Boolean);
+  const words = new Set();
+  lines.slice(1).forEach((line) => {
+    const word = line.split("/")[0]?.trim();
+    if (word) words.add(word.toLowerCase());
+  });
+  window.__qaTypoWordSet = words;
+  return words;
 }
 
 function removeTypoHighlights() {
@@ -185,7 +180,7 @@ function applyTypoHighlightStyles() {
   document.head.appendChild(style);
 }
 
-function checkTextNodeForTypos(node, dictionary) {
+function checkTextNodeForTypos(node, wordSet) {
   if (node.nodeType !== Node.TEXT_NODE || !node.nodeValue?.trim()) return;
   const text = node.nodeValue;
   const words = text.match(/\b[\w']+\b/g) || [];
@@ -198,7 +193,7 @@ function checkTextNodeForTypos(node, dictionary) {
     if (wordStart > lastIndex) {
       newNodes.push(document.createTextNode(text.slice(lastIndex, wordStart)));
     }
-    if (word.length > 1 && /^[a-zA-Z]+$/.test(word) && !dictionary.check(word)) {
+    if (word.length > 1 && /^[a-zA-Z]+$/.test(word) && !wordSet.has(word.toLowerCase())) {
       const span = document.createElement("span");
       span.className = "typo-word-highlight";
       span.textContent = word;
@@ -220,15 +215,15 @@ function checkTextNodeForTypos(node, dictionary) {
   }
 }
 
-function walkNodesForTypos(node, dictionary) {
+function walkNodesForTypos(node, wordSet) {
   if (!node) return;
   if (["SCRIPT", "STYLE", "NOSCRIPT", "IFRAME", "OBJECT", "CODE", "PRE"].includes(node.nodeName)) {
     return;
   }
   if (node.nodeType === Node.TEXT_NODE) {
-    checkTextNodeForTypos(node, dictionary);
+    checkTextNodeForTypos(node, wordSet);
   } else if (node.nodeType === Node.ELEMENT_NODE) {
-    Array.from(node.childNodes).forEach((child) => walkNodesForTypos(child, dictionary));
+    Array.from(node.childNodes).forEach((child) => walkNodesForTypos(child, wordSet));
   }
 }
 
@@ -241,11 +236,11 @@ async function runTypoScan() {
 
   try {
     applyTypoHighlightStyles();
-    const dictionary = await loadTypoDictionary();
-    walkNodesForTypos(document.body, dictionary);
+    const wordSet = await loadTypoWordSet();
+    walkNodesForTypos(document.body, wordSet);
     showTypoNotification("Typo checking complete! Click again to remove highlights.", "#4CAF50");
   } catch (error) {
-    showTypoNotification("Typo scan failed to load dictionary. Check network/CSP.", "#d32f2f");
+    showTypoNotification("Typo scan failed to load dictionary.", "#d32f2f");
   }
 }
 
