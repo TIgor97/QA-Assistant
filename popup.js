@@ -53,6 +53,41 @@ function toCsv(cases) {
   return rows.join("\n");
 }
 
+function toTxt(cases) {
+  return cases
+    .map((item, index) => {
+      const steps = Array.isArray(item.steps) ? item.steps.map((s) => `- ${s}`).join("\n") : "";
+      return `${index + 1}. ${item.title || "Test case"}\n` +
+        `Target: ${item.target || "-"}\n` +
+        `Steps:\n${steps || "-"}\n` +
+        `Expected: ${item.expected || "-"}`;
+    })
+    .join("\n\n");
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2200);
+}
+
+function downloadTextFile(filename, content) {
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  chrome.downloads.download({
+    url,
+    filename,
+    saveAs: true
+  }, () => {
+    URL.revokeObjectURL(url);
+  });
+}
+
 function toJira(cases) {
   return cases
     .map((item) => {
@@ -80,16 +115,30 @@ function toGherkin(cases) {
 async function copyExport(format) {
   const { lastScan } = await chrome.storage.session.get(["lastScan"]);
   const items = Array.isArray(lastScan) ? lastScan : [];
-  if (!items.length) return;
+  if (!items.length) {
+    showToast("Scan a page first to export test cases.");
+    return;
+  }
   let output = "";
   if (format === "markdown") output = toMarkdown(items);
   if (format === "gherkin") output = toGherkin(items);
   if (format === "json") output = JSON.stringify(items, null, 2);
   if (format === "csv") output = toCsv(items);
+  if (format === "txt") output = toTxt(items);
   if (format === "jira") output = toJira(items);
   if (format === "playwright") output = toScript(items, "playwright");
   if (format === "cypress") output = toScript(items, "cypress");
-  if (output) await navigator.clipboard.writeText(output);
+  if (output) {
+    try {
+      await navigator.clipboard.writeText(output);
+      showToast(`Exported ${format.toUpperCase()} to clipboard.`);
+    } catch {
+      showToast("Clipboard blocked. Check browser permissions.");
+    }
+    if (format === "txt") {
+      downloadTextFile("qa-test-cases.txt", output);
+    }
+  }
 }
 
 function renderPreview(previewItems, container) {
@@ -322,7 +371,7 @@ document.getElementById("pickSelector").addEventListener("click", async () => {
   if (!tabId) return;
   await ensureContentScript(tabId);
   await chrome.tabs.sendMessage(tabId, { type: "QA_START_PICK_SELECTOR" });
-  window.close();
+  showToast("Pick an element on the page.");
 });
 
 document.getElementById("insertData").addEventListener("click", async () => {
@@ -362,6 +411,18 @@ document.getElementById("scanPage").addEventListener("click", async () => {
 
   const res = await chrome.tabs.sendMessage(tabId, { type: "QA_SCAN_PAGE" });
   await chrome.storage.session.set({ lastScan: res?.testCases || [] });
+  if (Array.isArray(res?.testCases) && res.testCases.length) {
+    const txtOutput = toTxt(res.testCases);
+    try {
+      await navigator.clipboard.writeText(txtOutput);
+      showToast("Scan complete. TXT copied to clipboard and downloaded.");
+    } catch {
+      showToast("Scan complete. TXT downloaded. Clipboard blocked.");
+    }
+    downloadTextFile("qa-scan.txt", txtOutput);
+  } else {
+    showToast("No test cases found on this page.");
+  }
   await refreshSessionState();
 });
 
@@ -386,6 +447,7 @@ document.getElementById("scanSecurity").addEventListener("click", async () => {
     renderSecurity(res.result, results);
     renderChecklist(buildSecurityChecklist(res.result), checklist);
     renderChecklist(buildOwaspChecklist(res.result), owaspChecklist);
+    showToast("Security scan complete.");
   }
 });
 
@@ -414,7 +476,7 @@ document.getElementById("copySnippet").addEventListener("click", async () => {
   await ensureContentScript(tabId);
   const target = document.getElementById("snippetType").value;
   await chrome.tabs.sendMessage(tabId, { type: "QA_COPY_SNIPPET", target });
-  window.close();
+  showToast("Snippet generated and copied to clipboard.");
 });
 
 document.getElementById("exportMarkdown").addEventListener("click", async () => {
@@ -441,6 +503,10 @@ document.getElementById("exportCsv").addEventListener("click", async () => {
   await copyExport("csv");
 });
 
+document.getElementById("exportTxt").addEventListener("click", async () => {
+  await copyExport("txt");
+});
+
 document.getElementById("exportJira").addEventListener("click", async () => {
   await copyExport("jira");
 });
@@ -458,7 +524,13 @@ document.getElementById("defaultExport").addEventListener("change", async (e) =>
   await chrome.storage.local.set({ defaultExport: e.target.value });
 });
 
-chrome.storage.session.onChanged.addListener(() => {
+chrome.storage.session.onChanged.addListener((changes) => {
+  if (changes.lastSelector?.newValue) {
+    showToast("Selector captured and copied.");
+  }
+  if (changes.lastSnippet?.newValue) {
+    showToast("Snippet generated and copied.");
+  }
   refreshSessionState();
 });
 

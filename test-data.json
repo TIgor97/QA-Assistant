@@ -456,6 +456,190 @@
       "Iva \u0106uri\u0107"
     ]
   },
+  "nameGreek": {
+    "valid": [
+      "Giorgos Papadopoulos",
+      "Eleni Nikolaou",
+      "Kostas Georgiou",
+      "Maria Dimitriou",
+      "Nikos Andreou"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\u0393\u03b9\u03ce\u03c1\u03b3\u03bf\u03c2 \u03a0\u03b1\u03c0\u03b1\u03b4\u03cc\u03c0\u03bf\u03c5\u03bb\u03bf\u03c2",
+      "\u0395\u03bb\u03ad\u03bd\u03b7 \u039d\u03b9\u03ba\u03bf\u03bb\u03ac\u03bf\u03c5",
+      "K. \u0391\u03bd\u03b4\u03c1\u03ad\u03bf\u03c5",
+      "Ioannis \u039d.",
+      "Anna-Maria"
+    ]
+  },
+  "nameArabic": {
+    "valid": [
+      "\u0623\u062d\u0645\u062f \u0639\u0644\u064a",
+      "\u0641\u0627\u0637\u0645\u0629 \u0627\u0644\u0632\u0647\u0631\u0627\u0621",
+      "\u0645\u062d\u0645\u062f \u062d\u0633\u064a\u0646",
+      "\u0646\u0648\u0631 \u0623\u062d\u0645\u062f",
+      "\u0633\u0627\u0645\u064a \u0627\u0644\u062d\u0627\u0645\u062f"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\u064a\u0627\u0633\u0645\u064a\u0646 \u0628\u0646 \u0639\u0644\u064a",
+      "\u0623\u062d\u0645\u062f-\u0641\u0627\u0631\u0633",
+      "\u0641\u0627\u0637\u0645\u0629 \u0632.",
+      "\u0645\u062d\u0645\u062f \u0627\u0628\u0646 \u0633\u0639\u064a\u062f",
+      "\u0644\u064a\u0644\u0649"
+    ]
+  },
+  "nameHindi": {
+    "valid": [
+      "\u0905\u092e\u093f\u0924 \u0915\u0941\u092e\u093e\u0930",
+      "\u092a\u094d\u0930\u093f\u092f\u093e \u0936\u0930\u094d\u092e\u093e",
+      "\u0930\u093e\u0939\u0941\u0932 \u0935\u0930\u094d\u092e\u093e",
+      "\u0938\u0941\u092e\u093f\u0924\u093e \u092e\u0947\u0939\u0924\u093e",
+      "\u0935\u093f\u0935\u0947\u0915 \u0917\u0941\u092a\u094d\u0924\u093e"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\u0905\u0928\u093f\u0932-\u0915\u0941\u092e\u093e\u0930",
+      "\u0938\u0940\u092e\u093e \u0915.",
+      "\u0930\u093e\u091c\u0947\u0936 \u092a\u094d\u0930\u0938\u093e\u0926",
+      "\u0936\u094d\u0930\u0940 \u0930\u093e\u092e",
+      "\u0905\u0928\u093f\u0915\u093e"
+    ]
+  },
+  "nameKorean": {
+    "valid": [
+      "\uae40\ubbfc\uc218",
+      "\uc774\uc9c0\uc740",
+      "\ubc15\uc9c4\uc6b0",
+      "\ucd5c\uc9c0\ud604",
+      "\uc815\uc608\ub9b0"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\ud64d \uae38\ub3d9",
+      "\ucd5c-\uc9c4\uc544",
+      "\uae40 \uc9c0\uc740",
+      "\uc720\ub098 \uac15",
+      "\uc131\uc9c4"
+    ]
+  },
+  "nameTurkish": {
+    "valid": [
+      "Mehmet \u00d6zt\u00fcrk",
+      "Ay\u015fe Demir",
+      "Ali \u015eahin",
+      "Zeynep Ayd\u0131n",
+      "Mustafa \u00c7elik"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\u0130lker \u00c7a\u011flar",
+      "Ahmet-\u015e\u00fckr\u00fc",
+      "Fatma N.",
+      "O\u011fuzhan \u0130nan",
+      "S\u0131la"
+    ]
+  },
+  "nameVietnamese": {
+    "valid": [
+      "Nguy\u1ec5n V\u0103n An",
+      "Tr\u1ea7n Th\u1ecb Mai",
+      "L\u00ea Quang Huy",
+      "Ph\u1ea1m Thu H\u1eb1ng",
+      "V\u0169 Minh Khoa"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\u0110\u1eb7ng-Th\u1ecb",
+      "Ho\u00e0ng V.",
+      "Ng\u00f4 \u0110\u1ee9c",
+      "Phan \u0110\u1ee9c Th\u1ecbnh",
+      "L\u00fd"
+    ]
+  },
+  "namePolish": {
+    "valid": [
+      "\u0141ukasz Nowak",
+      "Agnieszka Kowalska",
+      "Micha\u0142 Zieli\u0144ski",
+      "Katarzyna Wi\u015bniewska",
+      "Pawe\u0142 Wo\u017aniak"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "Jan-\u0141ukasz",
+      "K. \u017b\u00f3\u0142\u0107",
+      "Marek O'Kowalski",
+      "Anna-Maria",
+      "Iga"
+    ]
+  },
+  "nameUkrainian": {
+    "valid": [
+      "\u041e\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440 \u041f\u0435\u0442\u0440\u0435\u043d\u043a\u043e",
+      "\u041e\u043b\u0435\u043d\u0430 \u041a\u043e\u0432\u0430\u043b\u0435\u043d\u043a\u043e",
+      "\u0410\u043d\u0434\u0440\u0456\u0439 \u041c\u0435\u043b\u044c\u043d\u0438\u043a",
+      "\u041d\u0430\u0442\u0430\u043b\u0456\u044f \u0428\u0435\u0432\u0447\u0435\u043d\u043a\u043e",
+      "\u041c\u0430\u0440\u0456\u044f \u0411\u043e\u043d\u0434\u0430\u0440\u0435\u043d\u043a\u043e"
+    ],
+    "invalid": [
+      "",
+      "123",
+      "@@@",
+      "   ",
+      "<script>alert(1)</script>"
+    ],
+    "edge": [
+      "\u0404\u0432\u0433\u0435\u043d \u0427\u0443\u043c\u0430\u043a",
+      "\u041e\u043b\u0435\u043a\u0441\u0456\u0439-\u0411\u043e\u0433\u0434\u0430\u043d",
+      "\u0410\u043d\u043d\u0430 \u041c.",
+      "\u0414\u043c\u0438\u0442\u0440\u043e O'\u041c\u0435\u043b\u044c\u043d\u0438\u043a",
+      "\u041b\u0456\u0434\u0430"
+    ]
+  },
   "phone": {
     "valid": [
       "+44 7700 900123",

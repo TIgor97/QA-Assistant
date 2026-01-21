@@ -177,24 +177,34 @@ async function initMenus() {
     { id: "js", label: "Vanilla JS" }
   ];
 
+  const actionItems = [
+    { id: "click", label: "Click" },
+    { id: "double", label: "Double click" },
+    { id: "triple", label: "Triple click" },
+    { id: "hover", label: "Hover" },
+    { id: "right", label: "Right click" },
+    { id: "long-press", label: "Long press" },
+    { id: "swipe", label: "Swipe" },
+    { id: "drag", label: "Drag & drop" },
+    { id: "file-upload", label: "File upload" },
+    { id: "type", label: "Type" },
+    { id: "select", label: "Select option" },
+    { id: "check", label: "Check" },
+    { id: "uncheck", label: "Uncheck" },
+    { id: "key-enter", label: "Press Enter" },
+    { id: "key-escape", label: "Press Escape" },
+    { id: "key-tab", label: "Press Tab" },
+    { id: "scroll", label: "Scroll into view" }
+  ];
+
   actionTargets.forEach((target) => {
-    chrome.contextMenus.create({
-      id: `qa_action:${target.id}:click`,
-      parentId: "qa_action_suggestions",
-      title: `Click (${target.label})`,
-      contexts: ["all"]
-    });
-    chrome.contextMenus.create({
-      id: `qa_action:${target.id}:double`,
-      parentId: "qa_action_suggestions",
-      title: `Double click (${target.label})`,
-      contexts: ["all"]
-    });
-    chrome.contextMenus.create({
-      id: `qa_action:${target.id}:triple`,
-      parentId: "qa_action_suggestions",
-      title: `Triple click (${target.label})`,
-      contexts: ["all"]
+    actionItems.forEach((action) => {
+      chrome.contextMenus.create({
+        id: `qa_action:${target.id}:${action.id}`,
+        parentId: "qa_action_suggestions",
+        title: `${action.label} (${target.label})`,
+        contexts: ["all"]
+      });
     });
   });
 

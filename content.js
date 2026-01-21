@@ -94,6 +94,17 @@ function setOutline(el) {
   el.style.outline = "2px solid #ff3b30";
 }
 
+function showToast(message) {
+  if (!message) return;
+  const existing = document.querySelector(".qa-toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "qa-toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2400);
+}
+
 function generateTestData(kind, variant) {
   return testDataCache?.[kind]?.[variant]?.[0] ?? "";
 }
@@ -303,11 +314,59 @@ function formatActionSnippet(selector, target, action) {
   if (!selector) return "";
   const clickAction = action || "click";
   if (target === "playwright" || target === "playwright-ts") {
+    if (clickAction === "hover") return `await page.locator('${selector}').hover();`;
+    if (clickAction === "right") return `await page.locator('${selector}').click({ button: 'right' });`;
+    if (clickAction === "long-press") {
+      return `await page.locator('${selector}').click({ delay: 1000 });`;
+    }
+    if (clickAction === "swipe") {
+      return `await page.locator('${selector}').dragTo(page.locator('TARGET_SELECTOR'));`;
+    }
+    if (clickAction === "drag") {
+      return `await page.locator('${selector}').dragTo(page.locator('TARGET_SELECTOR'));`;
+    }
+    if (clickAction === "file-upload") {
+      return `await page.setInputFiles('${selector}', 'path/to/file');`;
+    }
+    if (clickAction === "type") return `await page.locator('${selector}').fill('');`;
+    if (clickAction === "select") return `await page.locator('${selector}').selectOption('');`;
+    if (clickAction === "check") return `await page.locator('${selector}').check();`;
+    if (clickAction === "uncheck") return `await page.locator('${selector}').uncheck();`;
+    if (clickAction === "key-enter") return `await page.locator('${selector}').press('Enter');`;
+    if (clickAction === "key-escape") return `await page.locator('${selector}').press('Escape');`;
+    if (clickAction === "key-tab") return `await page.locator('${selector}').press('Tab');`;
+    if (clickAction === "scroll") return `await page.locator('${selector}').scrollIntoViewIfNeeded();`;
     if (clickAction === "double") return `await page.locator('${selector}').dblclick();`;
     if (clickAction === "triple") return `await page.locator('${selector}').click({ clickCount: 3 });`;
     return `await page.locator('${selector}').click();`;
   }
   if (target === "cypress" || target === "cypress-ts") {
+    if (clickAction === "hover") return `cy.get('${selector}').trigger('mouseover');`;
+    if (clickAction === "right") return `cy.get('${selector}').rightclick();`;
+    if (clickAction === "long-press") {
+      return `cy.get('${selector}').trigger('mousedown');
+cy.wait(1000);
+cy.get('${selector}').trigger('mouseup');`;
+    }
+    if (clickAction === "swipe") {
+      return `cy.get('${selector}').trigger('pointerdown');
+cy.get('TARGET_SELECTOR').trigger('pointermove').trigger('pointerup');`;
+    }
+    if (clickAction === "drag") {
+      return `cy.get('${selector}').trigger('mousedown');
+cy.get('TARGET_SELECTOR').trigger('mousemove').trigger('mouseup');`;
+    }
+    if (clickAction === "file-upload") {
+      return `cy.get('${selector}').selectFile('path/to/file');`;
+    }
+    if (clickAction === "type") return `cy.get('${selector}').type('');`;
+    if (clickAction === "select") return `cy.get('${selector}').select('');`;
+    if (clickAction === "check") return `cy.get('${selector}').check();`;
+    if (clickAction === "uncheck") return `cy.get('${selector}').uncheck();`;
+    if (clickAction === "key-enter") return `cy.get('${selector}').type('{enter}');`;
+    if (clickAction === "key-escape") return `cy.get('${selector}').type('{esc}');`;
+    if (clickAction === "key-tab") return `cy.get('${selector}').type('{tab}');`;
+    if (clickAction === "scroll") return `cy.get('${selector}').scrollIntoView();`;
     if (clickAction === "double") return `cy.get('${selector}').dblclick();`;
     if (clickAction === "triple") {
       return `cy.get('${selector}').click().click().click();`;
@@ -315,6 +374,42 @@ function formatActionSnippet(selector, target, action) {
     return `cy.get('${selector}').click();`;
   }
   if (target === "selenium-js" || target === "selenium-ts") {
+    if (clickAction === "hover") {
+      return `const el = await driver.findElement(By.css('${selector}'));
+await driver.actions().move({ origin: el }).perform();`;
+    }
+    if (clickAction === "right") {
+      return `const el = await driver.findElement(By.css('${selector}'));
+await driver.actions().contextClick(el).perform();`;
+    }
+    if (clickAction === "long-press") {
+      return `const el = await driver.findElement(By.css('${selector}'));
+await driver.actions().clickAndHold(el).pause(1000).release().perform();`;
+    }
+    if (clickAction === "swipe") {
+      return `const el = await driver.findElement(By.css('${selector}'));
+const target = await driver.findElement(By.css('TARGET_SELECTOR'));
+await driver.actions().dragAndDrop(el, target).perform();`;
+    }
+    if (clickAction === "drag") {
+      return `const el = await driver.findElement(By.css('${selector}'));
+const target = await driver.findElement(By.css('TARGET_SELECTOR'));
+await driver.actions().dragAndDrop(el, target).perform();`;
+    }
+    if (clickAction === "file-upload") {
+      return `await driver.findElement(By.css('${selector}')).sendKeys('path/to/file');`;
+    }
+    if (clickAction === "type") return `await driver.findElement(By.css('${selector}')).sendKeys('');`;
+    if (clickAction === "select") return `await driver.findElement(By.css('${selector}')).sendKeys('OPTION_VALUE');`;
+    if (clickAction === "check") return `await driver.findElement(By.css('${selector}')).click();`;
+    if (clickAction === "uncheck") return `await driver.findElement(By.css('${selector}')).click();`;
+    if (clickAction === "key-enter") return `await driver.findElement(By.css('${selector}')).sendKeys(Key.ENTER);`;
+    if (clickAction === "key-escape") return `await driver.findElement(By.css('${selector}')).sendKeys(Key.ESCAPE);`;
+    if (clickAction === "key-tab") return `await driver.findElement(By.css('${selector}')).sendKeys(Key.TAB);`;
+    if (clickAction === "scroll") {
+      return `const el = await driver.findElement(By.css('${selector}'));
+await driver.executeScript('arguments[0].scrollIntoView({block: "center"});', el);`;
+    }
     if (clickAction === "double") {
       return `const el = await driver.findElement(By.css('${selector}'));
 await driver.actions().doubleClick(el).perform();`;
@@ -326,6 +421,56 @@ await el.click();
 await el.click();`;
     }
     return `await driver.findElement(By.css('${selector}')).click();`;
+  }
+  if (clickAction === "hover") {
+    return `document.querySelector('${selector}')?.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));`;
+  }
+  if (clickAction === "right") {
+    return `document.querySelector('${selector}')?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }));`;
+  }
+  if (clickAction === "long-press") {
+    return `const el = document.querySelector('${selector}');
+if (el) { el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+setTimeout(() => el.dispatchEvent(new MouseEvent('mouseup', { bubbles: true })), 1000); }`;
+  }
+  if (clickAction === "swipe") {
+    return `const el = document.querySelector('${selector}');
+if (el) { el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); }`;
+  }
+  if (clickAction === "drag") {
+    return `const el = document.querySelector('${selector}');
+if (el) { el.dispatchEvent(new DragEvent('dragstart', { bubbles: true })); }`;
+  }
+  if (clickAction === "file-upload") {
+    return `document.querySelector('${selector}')?.dispatchEvent(new Event('change', { bubbles: true }));`;
+  }
+  if (clickAction === "type") {
+    return `const el = document.querySelector('${selector}');
+if (el) { el.focus(); el.value = ''; el.dispatchEvent(new Event('input', { bubbles: true })); }`;
+  }
+  if (clickAction === "select") {
+    return `const el = document.querySelector('${selector}');
+if (el) { el.value = ''; el.dispatchEvent(new Event('change', { bubbles: true })); }`;
+  }
+  if (clickAction === "check") {
+    return `const el = document.querySelector('${selector}');
+if (el) { el.checked = true; el.dispatchEvent(new Event('change', { bubbles: true })); }`;
+  }
+  if (clickAction === "uncheck") {
+    return `const el = document.querySelector('${selector}');
+if (el) { el.checked = false; el.dispatchEvent(new Event('change', { bubbles: true })); }`;
+  }
+  if (clickAction === "key-enter") {
+    return `document.querySelector('${selector}')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));`;
+  }
+  if (clickAction === "key-escape") {
+    return `document.querySelector('${selector}')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));`;
+  }
+  if (clickAction === "key-tab") {
+    return `document.querySelector('${selector}')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));`;
+  }
+  if (clickAction === "scroll") {
+    return `document.querySelector('${selector}')?.scrollIntoView({ behavior: 'smooth', block: 'center' });`;
   }
   if (clickAction === "double") {
     return `document.querySelector('${selector}')?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));`;
@@ -816,6 +961,7 @@ async function onClick(e) {
   if (selector) {
     await navigator.clipboard.writeText(selector).catch(() => { });
     chrome.runtime.sendMessage({ type: "QA_SELECTOR_PICKED", selector, meta });
+    showToast("Selector copied to clipboard");
   }
 }
 
@@ -878,6 +1024,7 @@ async function handleMessage(msg, sendResponse) {
     const code = formatStrategySnippet(selector, msg.target, element);
     if (code) {
       await navigator.clipboard.writeText(code).catch(() => { });
+      showToast("Snippet copied to clipboard");
     }
     sendResponse({ code });
   }
@@ -888,6 +1035,7 @@ async function handleMessage(msg, sendResponse) {
     const code = formatActionSnippet(selector, msg.target, msg.action);
     if (code) {
       await navigator.clipboard.writeText(code).catch(() => { });
+      showToast("Action snippet copied to clipboard");
     }
     sendResponse({ code });
   }

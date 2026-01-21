@@ -3,8 +3,16 @@
   "name": "QA Testing Assistant",
   "version": "0.1.0",
   "description": "QA helper: selector picker, test data, page scan test ideas.",
-  "permissions": ["activeTab", "contextMenus", "storage", "scripting"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "storage",
+    "scripting",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "background": {
     "service_worker": "background.js"
   },
@@ -14,17 +22,27 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["content.css"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
       "run_at": "document_idle",
       "all_frames": true
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["test-data.json"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "test-data.json"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }

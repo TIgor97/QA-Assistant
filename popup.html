@@ -78,6 +78,14 @@
           <option value="nameSerbian">Serbian names</option>
           <option value="nameBosnian">Bosnian names</option>
           <option value="nameCroatian">Croatian names</option>
+          <option value="nameGreek">Greek names</option>
+          <option value="nameArabic">Arabic names</option>
+          <option value="nameHindi">Hindi names</option>
+          <option value="nameKorean">Korean names</option>
+          <option value="nameTurkish">Turkish names</option>
+          <option value="nameVietnamese">Vietnamese names</option>
+          <option value="namePolish">Polish names</option>
+          <option value="nameUkrainian">Ukrainian names</option>
           <option value="phone">Phone</option>
           <option value="phoneIntl">Phone (Intl)</option>
           <option value="creditCard">Credit card</option>
@@ -175,6 +183,7 @@
         <button id="exportGherkin" class="inline-button">Gherkin</button>
         <button id="exportJson" class="inline-button">JSON</button>
         <button id="exportCsv" class="inline-button">CSV</button>
+        <button id="exportTxt" class="inline-button">TXT</button>
         <button id="exportJira" class="inline-button">Jira</button>
         <button id="exportPlaywright" class="inline-button">Playwright</button>
         <button id="exportCypress" class="inline-button">Cypress</button>
@@ -221,6 +230,7 @@
     </div>
 
     <div class="footer">Context menu also available (right click).</div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
 
   <script src="popup.js"></script>
