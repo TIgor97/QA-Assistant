@@ -234,7 +234,7 @@ async function initMenus() {
   chrome.contextMenus.create({
     id: "qa_scan_typos",
     parentId: "qa_open",
-    title: "Scan page for typos",
+    title: "Scan for typos",
     contexts: ["all"]
   });
 
