@@ -149,6 +149,15 @@ function removeTypoHighlights() {
   document.querySelectorAll(".typo-notification").forEach((el) => el.remove());
   const styleEl = document.getElementById("qa-typo-style");
   if (styleEl) styleEl.remove();
+  window.__qaTypoActive = false;
+  document.removeEventListener("click", handleTypoClearClick, true);
+}
+
+function handleTypoClearClick(event) {
+  if (event.button !== 0) return;
+  if (!document.querySelector(".typo-word-highlight")) return;
+  removeTypoHighlights();
+  showTypoNotification("Typo highlights removed!", "#4CAF50");
 }
 
 function applyTypoHighlightStyles() {
@@ -238,6 +247,8 @@ async function runTypoScan() {
     applyTypoHighlightStyles();
     const wordSet = await loadTypoWordSet();
     walkNodesForTypos(document.body, wordSet);
+    window.__qaTypoActive = true;
+    document.addEventListener("click", handleTypoClearClick, true);
     showTypoNotification("Typo checking complete! Click again to remove highlights.", "#4CAF50");
   } catch (error) {
     showTypoNotification("Typo scan failed to load dictionary.", "#d32f2f");
