@@ -11,9 +11,9 @@ async function loadTestData() {
 async function fetchTypoAssets() {
   if (typoAssetsCache) return typoAssetsCache;
   const [sourceRes, affRes, dicRes] = await Promise.all([
-    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/typo.min.js"),
-    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/dictionaries/en_US/en_US.aff"),
-    fetch("https://cdn.jsdelivr.net/npm/typo-js@1.2.3/dictionaries/en_US/en_US.dic")
+    fetch(chrome.runtime.getURL("assets/typo/typo.min.js")),
+    fetch(chrome.runtime.getURL("assets/typo/en_US.aff")),
+    fetch(chrome.runtime.getURL("assets/typo/en_US.dic"))
   ]);
   const [source, aff, dic] = await Promise.all([
     sourceRes.text(),
